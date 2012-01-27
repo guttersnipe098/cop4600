@@ -1,3 +1,22 @@
+/*******************************************************************************
+* File:      obj1.c
+* Version:   0.1
+* Purpose:   Implements loading the event list
+* Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
+*            Sean Szumlanski
+* Coded by:  Michael Altfield <maltfield@knights.ucf.edu>
+* Course:    COP 4600 <http://www.cs.ucf.edu/courses/cop4600/spring2012>
+* Objective: 1
+* Created:   2012-01-27
+* Updated:   2012-01-27
+* Notes:     This program was written to be compiled against the gnu99 standard.
+*            Please execute the following commands to build correctly:
+*
+*  CFLAGS="-g -I/home/eurip/ossim2010 --std=gnu99"
+*  export CFLAGS
+*  make -e sim
+*******************************************************************************/
+
 /**
 	obj1.c
 
@@ -48,6 +67,42 @@ int  get_event_id( char* );
 void
 Load_Events( )
 {
+
+// DECLARE VARIBLES
+FILE* logon;       // file pointer to our input file
+char line[BUFSIZ]; // buffer for each line in our input file
+
+int event_id;
+int agent_id;
+struct time_type* simTime;
+
+// open logon file for reading
+logon = fopen( LOGON_FILENAME, "r" );
+
+// loop line-by-line until EOF
+while( fgets( line, sizeof(line), logon) ){
+
+	// DECLARE VARIABLES
+	char event_name[BUFSIZ];
+	char agent_name[BUFSIZ];
+	int time;
+
+	sscanf( line, "%s %s %d", &event_name, &agent_name, &time );
+	printf( "Event Name: %s\n", event_name );
+	printf( "Agent Name: %s\n", agent_name );
+	printf( "Time: %d\n", time );
+
+	agent_id = get_agent_id( agent_name );
+	printf( "\tAgent ID: %d\n", agent_id );
+
+	event_id = get_event_id( event_name );
+	printf( "\tEvent ID: %d\n", event_id );
+
+}
+
+// close logon file
+fclose( logon );
+
 }
 
 /**
@@ -150,8 +205,32 @@ Write_Event( int event, int agent, struct time_type *time )
 int
 get_event_id( char* event_name )
 {
-	// temporary return value
-	return( 0 );
+	// convert to upper case
+	event_name = strupr(event_name);
+
+	// is the Event Name too long?
+	if( strlen(event_name) > EVENT_NAME_LENGTH_MAX ){
+		// Event Name is too long; warn
+		err_warn(
+		 "Event Name (%s) is too long (>%d)", event_name, EVENT_NAME_LENGTH_MAX
+		);
+	}
+
+	// loop through every known event
+	for( int i=0; i<NUM_EVENTS; i++ ){
+
+		// does this known event match this event_name?
+		if( strncmp( event_name, Event_Names[i], EVENT_NAME_LENGTH_MAX ) == 0 ){
+			// this event matches our event_name; return its index
+			return i;
+		}
+
+	}
+
+	// if we made it this far, there was an error
+	err_quit( "Failed to get Event ID from Event Name (%s)", event_name );
+
+
 }
 
 /**
@@ -180,8 +259,45 @@ get_event_id( char* event_name )
 int
 get_agent_id( char* agent_name )
 {
-	// temporary return value
-	return( 0 );
+
+	// convert to upper case
+	agent_name = strupr(agent_name);
+
+	// is the Agent Name too long?
+	if( strlen(agent_name) > DEV_NAME_LENGTH ){
+		// Agent Name is too long; warn
+		err_warn(
+		 "Agent Name (%s) is too long (>%d)", agent_name, DEV_NAME_LENGTH
+		);
+	}
+
+	// what type of agent is this?
+	if( agent_name[0] == 'U' ){
+		// agent is a terminal
+
+		// convert all but first letter of agent_name to integer
+		return atoi( &agent_name[1] );
+
+	}
+
+	// if we made it this far, agent is a device
+	// loop through every known device
+	for( int i=0; i<Num_Devices; i++ ){
+
+		// does this device match this agent?
+		if( strncmp( agent_name, Dev_Table[i].name, DEV_NAME_LENGTH ) == 0 ){
+			// this device is our agent
+
+			// we return this device's index + the number of terminals + 1
+			// because the devices agents IDs follow the user agent IDs
+			return (i + Num_Terminals + 1);
+		}
+
+	}
+
+	// if we made it this far, there was an error
+	err_quit( "Failed to get Agent ID from Agent Name (%s)", agent_name );
+
 }
 
 /**
