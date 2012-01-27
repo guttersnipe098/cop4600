@@ -68,40 +68,45 @@ void
 Load_Events( )
 {
 
-// DECLARE VARIBLES
-FILE* logon;       // file pointer to our input file
-char line[BUFSIZ]; // buffer for each line in our input file
+	// DECLARE VARIBLES
+	FILE* logon;       // file pointer to our input file
+	char line[BUFSIZ]; // buffer for each line in our input file
 
-int event_id;
-int agent_id;
-struct time_type* simTime;
+	int event_id;
+	int agent_id;
+	struct time_type* sim_time;
 
-// open logon file for reading
-logon = fopen( LOGON_FILENAME, "r" );
+	// open logon file for reading
+	logon = fopen( LOGON_FILENAME, "r" );
 
-// loop line-by-line until EOF
-while( fgets( line, sizeof(line), logon) ){
+	// loop line-by-line until EOF
+	while( fgets( line, sizeof(line), logon) ){
 
-	// DECLARE VARIABLES
-	char event_name[BUFSIZ];
-	char agent_name[BUFSIZ];
-	int time;
+		// DECLARE VARIABLES
+		char event_name[BUFSIZ];
+		char agent_name[BUFSIZ];
+		int time;
 
-	sscanf( line, "%s %s %d", &event_name, &agent_name, &time );
-	printf( "Event Name: %s\n", event_name );
-	printf( "Agent Name: %s\n", agent_name );
-	printf( "Time: %d\n", time );
+		sscanf( line, "%s %s %d", &event_name, &agent_name, &time );
+		// TODO remove debug lines:
+		//printf( "Event Name: %s\n", event_name );
+		//printf( "Agent Name: %s\n", agent_name );
+		//printf( "Time: %d\n", time );
 
-	agent_id = get_agent_id( agent_name );
-	printf( "\tAgent ID: %d\n", agent_id );
+		agent_id = get_agent_id( agent_name );
+		event_id = get_event_id( event_name );
+		Uint_to_time( time, sim_time );
+		// TODO remove debug lines:
+		//printf( "\tAgent ID: %d\n", agent_id );
+		//printf( "\tEvent ID: %d\n", event_id );
 
-	event_id = get_event_id( event_name );
-	printf( "\tEvent ID: %d\n", event_id );
+		// add event to the event list
+		Add_Event( event_id, agent_id, sim_time );
 
-}
+	}
 
-// close logon file
-fclose( logon );
+	// close logon file
+	fclose( logon );
 
 }
 

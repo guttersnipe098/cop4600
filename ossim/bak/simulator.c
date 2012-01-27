@@ -193,7 +193,7 @@ unsigned int   One_Over_Beta;     ///< expected CPU burst (SJN)
 double         RHO       =  0.0;  ///< SJN Smoothing factor
 
 // Debugging flags.
-int  DEBUG_EVT     = 0;  // Flag controlling Event_List debug output
+int  DEBUG_EVT     = 1;  // Flag controlling Event_List debug output
 int  DEBUG_MEM     = 0;  // Flag controlling Mem debug output
 int  DEBUG_PCB     = 0;  // Flag controlling Term_Table debug output
 int  DEBUG_RBLIST  = 0;  // Flag controlling pcb.rb_q debug output
