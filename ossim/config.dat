@@ -1,0 +1,13 @@
+LNAME=        data1
+OBJECTIVE=     1
+DEVICES=       2
+ID= PRNT  RATE=  10
+ID= DISK  RATE= 300
+TIME=          NSEC
+TERMINALS=     4
+MEMSIZE=       1000
+CPURATE=       500
+MAXSCRIPT=     2
+MAXSEGMENTS=   1
+SCHED=         FCFS
+DEBUG_EVT=     OFF

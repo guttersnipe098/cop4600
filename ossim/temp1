@@ -1,0 +1,82 @@
+ |                                                     |
+ |  DEBUG MEMORY ..........................OFF         |
+ |  DEBUG EVENT ...........................OFF         |
+ |  DEBUG PCB .............................OFF         |
+ |  DEBUG RBLIST ..........................OFF         |
+ |  DEBUG DEVQ ............................OFF         |
+ |  DEBUG CPUQ ............................OFF         |
+ |                                                     |
+ | =================  DEVICE TABLE =================== |
+ |                                                     |
+ |  ID      RATE (*)                                   |
+ |                                                     |
+ |  PRNT    10                                         |
+ |  DISK    300                                        |
+ |                                                     |
+ | (*) Bytes/Second                                    |
+ +-----------------------------------------------------+
+ EVENT  AGENT  HR:xxxxxxxx MN:xx SC:xx MS:xxx mS:xxx NS:xxx
+ -----  -----  ----------- ----- ----- ------ ------ ------
+ LOGON  U001   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
+ LOGON  U002   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
+ LOGON  U003   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS: 25
+ LOGON  U004   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS: 25
+ SIO    U001   HR:       0 MN: 0 SC: 0 MS:  0 mS: 11 NS:500
+ SIO    U001   HR:       0 MN: 0 SC: 0 MS:  0 mS: 27 NS:500
+ WIO    U001   HR:       0 MN: 0 SC: 0 MS:  0 mS: 27 NS:500
+ SIO    U002   HR:       0 MN: 0 SC: 0 MS:  0 mS: 41 NS:  0
+ SIO    U002   HR:       0 MN: 0 SC: 0 MS:  0 mS: 48 NS:500
+ END    U002   HR:       0 MN: 0 SC: 0 MS:  0 mS: 63 NS:500
+ SIO    U003   HR:       0 MN: 0 SC: 0 MS:  0 mS: 68 NS:500
+ WIO    U003   HR:       0 MN: 0 SC: 0 MS:  0 mS: 68 NS:500
+ SIO    U004   HR:       0 MN: 0 SC: 0 MS:  0 mS: 77 NS:500
+ WIO    U004   HR:       0 MN: 0 SC: 0 MS:  0 mS: 80 NS:  0
+ EIO    DISK   HR:       0 MN: 0 SC: 0 MS:  0 mS:127 NS:500
+ SIO    U001   HR:       0 MN: 0 SC: 0 MS:  0 mS:135 NS:  0
+ END    U001   HR:       0 MN: 0 SC: 0 MS:  0 mS:143 NS:500
+ EIO    PRNT   HR:       0 MN: 0 SC: 0 MS:  1 mS: 11 NS:500
+ EIO    DISK   HR:       0 MN: 0 SC: 0 MS:  1 mS:127 NS:500
+ EIO    DISK   HR:       0 MN: 0 SC: 0 MS: 14 mS:360 NS:800
+ END    U003   HR:       0 MN: 0 SC: 0 MS: 14 mS:379 NS:300
+ SIO    U003   HR:       0 MN: 0 SC: 0 MS: 14 mS:396 NS:300
+ SIO    U003   HR:       0 MN: 0 SC: 0 MS: 14 mS:402 NS:800
+ END    U003   HR:       0 MN: 0 SC: 0 MS: 14 mS:410 NS:300
+ EIO    DISK   HR:       0 MN: 0 SC: 0 MS: 17 mS:694 NS:100
+ SIO    U004   HR:       0 MN: 0 SC: 0 MS: 17 mS:700 NS:100
+ END    U004   HR:       0 MN: 0 SC: 0 MS: 17 mS:712 NS:100
+ EIO    DISK   HR:       0 MN: 0 SC: 0 MS: 18 mS:694 NS:100
+ EIO    PRNT   HR:       0 MN: 0 SC: 0 MS: 20 mS: 11 NS:500
+ EIO    PRNT   HR:       0 MN: 0 SC: 0 MS: 35 mS: 11 NS:500
+ SIO    U001   HR:       0 MN: 0 SC: 0 MS: 35 mS: 20 NS:500
+ SIO    U001   HR:       0 MN: 0 SC: 0 MS: 35 mS: 23 NS:  0
+ WIO    U001   HR:       0 MN: 0 SC: 0 MS: 35 mS: 32 NS:500
+ EIO    PRNT   HR:       0 MN: 0 SC: 0 MS: 55 mS: 11 NS:500
+ EIO    PRNT   HR:       0 MN: 0 SC: 1 MS:500 mS:  0 NS:  0
+ SIO    U004   HR:       0 MN: 0 SC: 1 MS:730 mS:  0 NS:  0
+ WIO    U004   HR:       0 MN: 0 SC: 1 MS:955 mS:  0 NS:  0
+ EIO    DISK   HR:       0 MN: 0 SC: 2 MS:500 mS:720 NS:950
+ SIO    U004   HR:       0 MN: 0 SC: 2 MS:500 mS:810 NS:450
+ END    U004   HR:       0 MN: 0 SC: 2 MS:500 mS:810 NS:950
+ EIO    PRNT   HR:       0 MN: 0 SC: 2 MS:600 mS:200 NS: 11
+ END    U001   HR:       0 MN: 0 SC: 2 MS:600 mS:200 NS: 18
+ EIO    PRNT   HR:       0 MN: 0 SC: 2 MS:600 mS:400 NS:500
+ EIO    PRNT   HR:       0 MN: 0 SC: 2 MS:600 mS:500 NS:  0
+                              TERMINAL  SUMMARY                             
+ ============================================================================
+ TERMNL|      EXEC      |      WAIT    |    BLOCKED   |    ELAPSED   |  %EFF
+ ======|================|==============|==============|==============|=======
+ ============================================================================
+ TOTALS|           0 SC |         0 SC |         0 SC |         0 SC |
+       |           0 NS |         0 NS |         0 NS |         0 NS |
+ ------|----------------|--------------|--------------|--------------|
+ AVERGE|           0 SC |         0 SC |         0 SC |         0 SC |
+       |           0 NS |         0 NS |         0 NS |         0 NS |
+ =====================================================================
+                                DEVICE  SUMMARY                            
+ ============================================================================
+ DEVICE|        BUSY    |      WAIT    |      IDLE    |   RESPONSE   | %UTIL
+ ======|================|==============|==============|==============|=======
+ CPU   |           0 SC |         0 SC |         0 SC |         0 SC | 0.00
+       |           0 NS |         0 NS |         0 NS |         0 NS |
+ ============================================================================
+End of Benchmark Report.
