@@ -105,8 +105,13 @@ Load_Events( )
 
 	}
 
+	// TODO: remove debug
+	printf( "FINISHED LIST\n" );
+
 	// close logon file
 	fclose( logon );
+
+	return;
 
 }
 
@@ -176,8 +181,23 @@ Add_Event( int event, int agent, struct time_type* time )
 
 		}
 
-		// now we insert the new node just before the current node
-		prev_node->next = new_node;
+		// where did we just insert the node in the list?
+		if( prev_node == Event_List ){
+			// we just added a node to the front of the list; update Event_List
+
+			new_node->next = Event_List;
+			Event_List = new_node;
+			new_node->prev = NULL;
+
+		} else {
+			// we did not add the node to the front of the list
+
+			// now we insert the new node just before the current node
+			prev_node->next = new_node;
+			new_node->next = cur_node;
+			new_node->prev = prev_node;
+
+		}
 
 		// did we just update the end of the list?
 		if( cur_node != NULL ){
@@ -185,12 +205,12 @@ Add_Event( int event, int agent, struct time_type* time )
 			cur_node->prev = new_node;
 		}
 
-		// did we just update the start of the linked list?
-		if( Event_List->prev == new_node ){
-			// we just added a node to the front of the list; update Event_List
-			Event_List = new_node;
-		}
+		// TODO: remove debug
+		printList();
+
 	}
+
+	return;
 
 }
 
@@ -212,6 +232,31 @@ Add_Event( int event, int agent, struct time_type* time )
 void
 Interrupt( )
 {
+
+	// DECLARE VARIABLES
+	struct event_list* event;
+
+	// remove first element from the list
+	event = Event_List;
+	Event_List = Event_List->next;
+
+	if( Event_List != NULL ){
+		Event_List->prev = NULL;
+	}
+
+	// update OS fields for this event
+	Clock = event->time;
+	Agent = event->agent;
+	Event = event->event;
+
+	// write event to output file
+	Write_Event( (int) event->event, event->agent, &(event->time) );
+
+	// deallocate this event from memory
+	free( event );
+
+	return;
+
 }
 
 /**
@@ -382,4 +427,21 @@ Dump_evt( )
 	}
 	else // do not print any message
 	{ ; }
+}
+
+// print the doubly linked list for debugging
+void printList(){
+
+	// DECLARE VARIABLES
+	struct event_list* node;
+
+	node = Event_List;
+	while( node != NULL ){
+
+		printf( "(%d|%d) -> ", node->event, node->agent );
+		node = node->next;
+
+	}
+	printf( "\n" );
+
 }
