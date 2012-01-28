@@ -88,7 +88,7 @@ Load_Events( )
 		char agent_name[BUFSIZ];
 		unsigned long time;
 
-		sscanf( line, "%s %s %d", &event_name, &agent_name, &time );
+		sscanf( line, "%s %s %lu", &event_name, &agent_name, &time );
 
 		agent_id = get_agent_id( agent_name );
 		event_id = get_event_id( event_name );

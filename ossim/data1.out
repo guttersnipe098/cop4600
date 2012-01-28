@@ -1,7 +1,7 @@
 
  +-----------------------------------------------------+
  |  COP 4600                          Simulator Report |
- |  DATE:  Fri Jan 27 23:25:06 2012                    |
+ |  DATE:  Fri Jan 27 23:41:46 2012                    |
  |  NAME:  data1                                       |
  |                                                     |
  |  OBJECTIVE # ...........................1           |
@@ -105,19 +105,19 @@
 
  WIO    U004   HR:       0 MN: 0 SC: 1 MS:955 mS:  0 NS:  0
 
- EIO    PRNT   HR:       0 MN: 0 SC: 2 MS:147 mS:483 NS:647
+ EIO    DISK   HR:       0 MN: 0 SC: 2 MS:500 mS:720 NS:950
 
- EIO    PRNT   HR:       0 MN: 0 SC: 2 MS:147 mS:483 NS:647
+ SIO    U004   HR:       0 MN: 0 SC: 2 MS:500 mS:810 NS:450
 
- END    U001   HR:       0 MN: 0 SC: 2 MS:147 mS:483 NS:647
+ END    U004   HR:       0 MN: 0 SC: 2 MS:500 mS:810 NS:950
 
- EIO    DISK   HR:       0 MN: 0 SC: 2 MS:147 mS:483 NS:647
+ EIO    PRNT   HR:       0 MN: 0 SC: 2 MS:600 mS:200 NS: 11
 
- EIO    PRNT   HR:       0 MN: 0 SC: 2 MS:147 mS:483 NS:647
+ END    U001   HR:       0 MN: 0 SC: 2 MS:600 mS:200 NS: 18
 
- END    U004   HR:       0 MN: 0 SC: 2 MS:147 mS:483 NS:647
+ EIO    PRNT   HR:       0 MN: 0 SC: 2 MS:600 mS:400 NS:500
 
- SIO    U004   HR:       0 MN: 0 SC: 2 MS:147 mS:483 NS:647
+ EIO    PRNT   HR:       0 MN: 0 SC: 2 MS:600 mS:500 NS:  0
 
 
 
