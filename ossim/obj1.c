@@ -89,25 +89,15 @@ Load_Events( )
 		unsigned long time;
 
 		sscanf( line, "%s %s %d", &event_name, &agent_name, &time );
-		// TODO remove debug lines:
-		//printf( "Event Name: %s\n", event_name );
-		//printf( "Agent Name: %s\n", agent_name );
-		//printf( "Time: %d\n", time );
 
 		agent_id = get_agent_id( agent_name );
 		event_id = get_event_id( event_name );
 		Uint_to_time( time, &sim_time );
-		// TODO remove debug lines:
-		//printf( "\tAgent ID: %d\n", agent_id );
-		//printf( "\tEvent ID: %d\n", event_id );
 
 		// add event to the event list
 		Add_Event( event_id, agent_id, &sim_time );
 
 	}
-
-	// TODO: remove debug
-	printf( "FINISHED LIST\n" );
 
 	// close logon file
 	fclose( logon );
@@ -151,7 +141,6 @@ Add_Event( int event, int agent, struct time_type* time )
 	struct event_list* prev_node; // ptr to the previous node (when iterating)
 
 	// allocate memory for the new new_node
-	// TODO: free(?)
 	new_node = (struct event_list*) malloc( sizeof(struct event_list) );
 
 	// store argments to the new new_node's fields
@@ -205,10 +194,6 @@ Add_Event( int event, int agent, struct time_type* time )
 			// we did not just update the end of the list; update last node
 			cur_node->prev = new_node;
 		}
-
-		// TODO: remove debug
-		printf( "just added (%d|%d)\n", event, agent );
-		printList();
 
 	}
 
@@ -314,7 +299,7 @@ Write_Event( int event, int agent, struct time_type *time )
 	}
 
 	print_out(
-	 "  %6s %5s HR:%8d MN:%2d SC:%2d MS:%3d mS:%3d NS:%3d\n",
+	 " %-5s %5s   HR:%8d MN:%2d SC:%2d MS:%3d mS:%3d NS:%3d\n\n",
 	 Event_Names[event], agent_name, hours, minutes, seconds, milli, micro, nano
 	);
 
