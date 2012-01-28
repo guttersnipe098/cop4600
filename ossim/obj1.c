@@ -44,6 +44,7 @@
 
 int  get_agent_id( char* );
 int  get_event_id( char* );
+void printList();
 
 /**
 	Initialize the event list from the file logon.dat. This file normally
@@ -285,6 +286,41 @@ Interrupt( )
 void
 Write_Event( int event, int agent, struct time_type *time )
 {
+
+	// DECLARE VARIABLES
+	int hours, minutes, seconds; // to be calculated from time_type.seconds
+	int milli, micro, nano;      // to be calculated from time_type.nanoseconds
+	char agent_name[BUFSIZ];
+	char agent_id[BUFSIZ];       // string to convert agent integer to string
+
+	hours =       (time->seconds) / 3600; // 60*60 = 3600 seconds in an hour
+	minutes =   ( (time->seconds) % 3600 ) / MIN;
+	seconds = ( ( (time->seconds) % 3600 ) % MIN );
+
+	milli =       (time->nanosec) / MSEC;
+	micro =     ( (time->nanosec) % MSEC ) / mSEC;
+	nano  =     ( (time->nanosec) % MSEC ) % mSEC;
+
+	// is the given agent a terminal or device?
+	if( agent <= Num_Terminals ){
+		// agent is a user terminal
+		strncpy( agent_name, "U", BUFSIZ );
+		sprintf( agent_id, "%03d", agent ); // TODO: use something more secure than sprintf
+		strncat( agent_name, agent_id , BUFSIZ );
+	} else {
+		// agent is a device
+		strncpy( agent_name, Dev_Table[ agent - Num_Terminals - 1 ].name, BUFSIZ );
+	}
+
+	print_out(
+	 "  %6s %5s HR:%8d MN:%2d SC:%2d MS:%3d mS:%3d NS:%3d\n",
+	 Event_Names[event], agent_name, hours, minutes, seconds, milli, micro, nano
+	);
+
+	// TODO: remove debug
+	//printf( "%s\n", agent_name );
+	return;
+
 }
 
 /**
