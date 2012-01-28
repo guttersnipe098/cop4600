@@ -1,7 +1,7 @@
 
  +-----------------------------------------------------+
  |  COP 4600                          Simulator Report |
- |  DATE:  Fri Jan 27 21:44:48 2012                    |
+ |  DATE:  Fri Jan 27 22:04:48 2012                    |
  |  NAME:  data1                                       |
  |                                                     |
  |  OBJECTIVE # ...........................1           |
@@ -31,10 +31,10 @@
 
  EVENT  AGENT  HR:xxxxxxxx MN:xx SC:xx MS:xxx mS:xxx NS:xxx
  -----  -----  ----------- ----- ----- ------ ------ ------
-   LOGON  U004 HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS: 25
    LOGON  U002 HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
-   LOGON  U003 HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS: 25
    LOGON  U001 HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
+   LOGON  U004 HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS: 25
+   LOGON  U003 HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS: 25
      SIO  U001 HR:       0 MN: 0 SC: 0 MS:  0 mS: 11 NS:500
      WIO  U001 HR:       0 MN: 0 SC: 0 MS:  0 mS: 27 NS:500
      SIO  U001 HR:       0 MN: 0 SC: 0 MS:  0 mS: 27 NS:500
@@ -53,8 +53,8 @@
      EIO  DISK HR:       0 MN: 0 SC: 0 MS: 14 mS:360 NS:800
      END  U003 HR:       0 MN: 0 SC: 0 MS: 14 mS:379 NS:300
      SIO  U003 HR:       0 MN: 0 SC: 0 MS: 14 mS:396 NS:300
-     END  U003 HR:       0 MN: 0 SC: 0 MS: 14 mS:410 NS:300
      SIO  U003 HR:       0 MN: 0 SC: 0 MS: 14 mS:402 NS:800
+     END  U003 HR:       0 MN: 0 SC: 0 MS: 14 mS:410 NS:300
      EIO  DISK HR:       0 MN: 0 SC: 0 MS: 17 mS:694 NS:100
      SIO  U004 HR:       0 MN: 0 SC: 0 MS: 17 mS:700 NS:100
      END  U004 HR:       0 MN: 0 SC: 0 MS: 17 mS:712 NS:100

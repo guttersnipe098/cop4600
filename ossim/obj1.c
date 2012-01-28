@@ -183,7 +183,7 @@ Add_Event( int event, int agent, struct time_type* time )
 		}
 
 		// where did we just insert the node in the list?
-		if( prev_node == Event_List ){
+		if( cur_node == Event_List ){
 			// we just added a node to the front of the list; update Event_List
 
 			new_node->next = Event_List;
@@ -207,6 +207,7 @@ Add_Event( int event, int agent, struct time_type* time )
 		}
 
 		// TODO: remove debug
+		printf( "just added (%d|%d)\n", event, agent );
 		printList();
 
 	}
@@ -317,8 +318,6 @@ Write_Event( int event, int agent, struct time_type *time )
 	 Event_Names[event], agent_name, hours, minutes, seconds, milli, micro, nano
 	);
 
-	// TODO: remove debug
-	//printf( "%s\n", agent_name );
 	return;
 
 }
@@ -475,6 +474,7 @@ void printList(){
 	while( node != NULL ){
 
 		printf( "(%d|%d) -> ", node->event, node->agent );
+		printf( "(%d|%d)\n", node->time.seconds, node->time.nanosec );
 		node = node->next;
 
 	}
