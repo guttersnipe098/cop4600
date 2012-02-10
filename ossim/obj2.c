@@ -41,6 +41,8 @@
 #include "osdefs.h"
 #include "externs.h"
 
+void skipBlankLines( int );
+
 /**
 	Simulate booting the operating system by loading the boot program into
 	kernel memory.
@@ -113,38 +115,89 @@ Boot( )
 
 	// DECLARE VARIABLES
 	char line[BUFSIZ]; // buffer for each line in our input file
-	int prog_id, size_of_segment, access_bit;
+	int num_segments;
 
-	//TODO: replace as needed
-	char segment_line[BUFSIZ];
-	char tmp[BUFSIZ];
-	int tmp2;
+	// get the number of segments defined in this file
+	fscanf( Prog_Files[BOOT], "PROGRAM %d\n", &num_segments );
+	// TODO: remove debug print
+	printf( "%d\n",num_segments );
 
-	// loop line-by-line until EOF
-	while( fgets( line, sizeof(line), Prog_Files[BOOT]) ){
+	// loop through each SEGMENT definition
+	for( int i=0; i<num_segments; i++ ){
 
 		// DECLARE VARIABLES
+		int element; // the current element in our Mem_Map array
+		int size_of_segment, access_bit;
 
-		sscanf( line, "PROGRAM %d\n", &prog_id );
-		printf( "%d\n", prog_id );
+		// our current element in Mem_Maps[] is this iteration's segment number
+		// plus the offset Max_Segments. Mem_Maps[] length = (Max_Segments * 2),
+		// where the first half is for program data. We store this boot data in
+		// the second half of Mem_Maps, hence the offset.
+		element = Max_Segments + i;
 
-		//fscanf( Prog_Files[BOOT], "d\n", &tmp, &tmp2 );
-		//printf( "|%s%d|", tmp, tmp2 );
+		// get this segment's size & access bit
 		fscanf( Prog_Files[BOOT], "SEGMENT %d %x\n",
 		 &size_of_segment, &access_bit
 		);
+		// TODO: remove debug print
 		printf( "%d %x\n", size_of_segment, access_bit );
 
-		for( int i=0; i<size_of_segment; i++ ){
+		// Mem_Map[].size
+		Mem_Map[element].size   = size_of_segment;
 
-			// TODO: call Get_Instr()
-			//Get_Instr( prog_id, );
-			;
+		// Mem_Map[].element
+		Mem_Map[element].access = access_bit;
+
+		// Mem_Map[].base
+		// is this the first element being stored to Mem_Map?
+		if( i == 0 ){
+			// this is the first element of Mem_Map; set the base to 0
+			Mem_Map[element].base = 0;
+		} else {
+			// this is not the first element of Mem_Map
+
+			// set this base to the last segment's base + the last segment's size
+			Mem_Map[element].base =
+			 Mem_Map[ element - 1 ].base + Mem_Map[ element - 1 ].size;
+		}
+
+		// update memory pointers
+		Total_Free     = Total_Free     - size_of_segment;
+		Free_Mem->size = Free_Mem->size - size_of_segment;
+		Free_Mem->base = Free_Mem->base + size_of_segment;
+
+	} // end for( each SEGMENT definition )
+
+	// loop through each segment
+	for( int i=0; i<num_segments; i++ ){
+
+		// DECLARE VARIABLES
+		int element; // the current element in our Mem_Map array
+
+		// element in Mem_Maps[] is segment number + offset (see above)
+		element = Max_Segments + i;
+
+		// skip blank lines that may be used for formatting boot.dat
+		skipBlankLines( BOOT );
+
+		// loop through each instruction in this segment
+		for( int j=0; j<Mem_Map[element].size; j++ ){
+
+			// call Get_Instr() where the pointer to the next instruction is the
+			// BOOT stream and the pointer to the instruction's future home in mem
+			// is the base of the current segment + the current instruction number
+			// in this segment
+			Get_Instr( BOOT, &Mem[ Mem_Map[element].base + j ] );
 
 		}
 
-
 	}
+/*
+		Display each segment of memory
+			Display segment Mem_Map[i + Max_Segments] since kernel resides in
+			Upper half of Mem_Map; pass NULL as PCB since OS has no PCB
+*/
+
 	return;
 
 }
@@ -201,13 +254,15 @@ Boot( )
 void
 Get_Instr( int prog_id, struct instr_type* instruction )
 {
+	// TODO: remove debug line
+	printf( "called Get_Inst()!\n" );
 
 	// DECLARE VARIABLES
 	//TODO: replace as needed
 	char line[BUFSIZ];
 
-	fgets( line, sizeof(line), Prog_Files[BOOT] );
-	printf( "\t%s\n", line );
+	fgets( line, sizeof(line), Prog_Files[prog_id] );
+	printf( "\t%s", line );
 
 	return;
 
@@ -533,4 +588,38 @@ Dump_mem( segment_type* seg_tab )
 	}
 	else // do not print any message
 	{ ; }
+}
+
+void
+skipBlankLines( int prog_id )
+{
+
+	// DECLARE VARIABLES
+	char line[BUFSIZ]; // buffer for each line in our input file
+	fpos_t seek_pos;   // stores current position of the stream
+	int sentinel = 1;
+
+	// loop until we detect a non-blank line
+	while( sentinel ){
+
+		// store the current position of the stream
+		fgetpos( Prog_Files[prog_id], &seek_pos );
+
+		// get the next line from the stream
+		fgets( line, sizeof(line), Prog_Files[prog_id] );
+
+		// is this line blank?
+		if( strncmp( line, "\n", 2 ) == 0  || strncmp( line, "", 1 ) == 0 ){
+			// this line is blank; do nothing so we'll keep gobbling up blank lines
+			;
+		} else {
+			// this line is *not* blank; backup to the previous line and return
+			fsetpos( Prog_Files[prog_id], &seek_pos );
+			sentinel = 0;
+		}
+
+	}
+
+	return;
+
 }
