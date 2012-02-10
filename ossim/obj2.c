@@ -1,6 +1,6 @@
 /*******************************************************************************
 * File:      obj2.c
-* Version:   0.1
+* Version:   0.2
 * Purpose:   Implements loading the event list
 * Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
 *            Sean Szumlanski
@@ -8,7 +8,7 @@
 * Course:    COP 4600 <http://www.cs.ucf.edu/courses/cop4600/spring2012>
 * Objective: 2
 * Created:   2012-02-07
-* Updated:   2012-02-07
+* Updated:   2012-02-10
 * Notes:     This program was written to be compiled against the gnu99 standard.
 *            Please execute the following commands to build correctly:
 *
@@ -111,7 +111,41 @@ void
 Boot( )
 {
 
-printf( "something wicked this way comes.\n" );
+	// DECLARE VARIABLES
+	char line[BUFSIZ]; // buffer for each line in our input file
+	int prog_id, size_of_segment, access_bit;
+
+	//TODO: replace as needed
+	char segment_line[BUFSIZ];
+	char tmp[BUFSIZ];
+	int tmp2;
+
+	// loop line-by-line until EOF
+	while( fgets( line, sizeof(line), Prog_Files[BOOT]) ){
+
+		// DECLARE VARIABLES
+
+		sscanf( line, "PROGRAM %d\n", &prog_id );
+		printf( "%d\n", prog_id );
+
+		//fscanf( Prog_Files[BOOT], "d\n", &tmp, &tmp2 );
+		//printf( "|%s%d|", tmp, tmp2 );
+		fscanf( Prog_Files[BOOT], "SEGMENT %d %x\n",
+		 &size_of_segment, &access_bit
+		);
+		printf( "%d %x\n", size_of_segment, access_bit );
+
+		for( int i=0; i<size_of_segment; i++ ){
+
+			// TODO: call Get_Instr()
+			//Get_Instr( prog_id, );
+			;
+
+		}
+
+
+	}
+	return;
 
 }
 
@@ -167,6 +201,16 @@ printf( "something wicked this way comes.\n" );
 void
 Get_Instr( int prog_id, struct instr_type* instruction )
 {
+
+	// DECLARE VARIABLES
+	//TODO: replace as needed
+	char line[BUFSIZ];
+
+	fgets( line, sizeof(line), Prog_Files[BOOT] );
+	printf( "\t%s\n", line );
+
+	return;
+
 }
 
 /**
