@@ -4,16 +4,10 @@ SEGMENT  4    0x02
 SEGMENT  8    0x03
 SEGMENT  1    0x04
 
-
-
-
-
-
 SIO    75
 DISK   2000
 SKIP   0
 JUMP   [2,0]
-
 
 SKIP   1
 JUMP   [3,0]

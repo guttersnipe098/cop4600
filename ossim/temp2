@@ -10,57 +10,47 @@
  |                                                     |
  |  ID      RATE (*)                                   |
  |                                                     |
- |  PRNT    10                                         |
- |  DISK    300                                        |
+ |  PRNT    400                                        |
+ |  DISK    3000                                       |
  |                                                     |
  | (*) Bytes/Second                                    |
  +-----------------------------------------------------+
  EVENT  AGENT  HR:xxxxxxxx MN:xx SC:xx MS:xxx mS:xxx NS:xxx
  -----  -----  ----------- ----- ----- ------ ------ ------
-   LOGON  U002 HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
-   LOGON  U001 HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
-   LOGON  U004 HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS: 25
-   LOGON  U003 HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS: 25
-     SIO  U001 HR:       0 MN: 0 SC: 0 MS:  0 mS: 11 NS:500
-     WIO  U001 HR:       0 MN: 0 SC: 0 MS:  0 mS: 27 NS:500
-     SIO  U001 HR:       0 MN: 0 SC: 0 MS:  0 mS: 27 NS:500
-     SIO  U002 HR:       0 MN: 0 SC: 0 MS:  0 mS: 41 NS:  0
-     SIO  U002 HR:       0 MN: 0 SC: 0 MS:  0 mS: 48 NS:500
-     END  U002 HR:       0 MN: 0 SC: 0 MS:  0 mS: 63 NS:500
-     WIO  U003 HR:       0 MN: 0 SC: 0 MS:  0 mS: 68 NS:500
-     SIO  U003 HR:       0 MN: 0 SC: 0 MS:  0 mS: 68 NS:500
-     SIO  U004 HR:       0 MN: 0 SC: 0 MS:  0 mS: 77 NS:500
-     WIO  U004 HR:       0 MN: 0 SC: 0 MS:  0 mS: 80 NS:  0
-     EIO  DISK HR:       0 MN: 0 SC: 0 MS:  0 mS:127 NS:500
-     SIO  U001 HR:       0 MN: 0 SC: 0 MS:  0 mS:135 NS:  0
-     END  U001 HR:       0 MN: 0 SC: 0 MS:  0 mS:143 NS:500
-     EIO  PRNT HR:       0 MN: 0 SC: 0 MS:  1 mS: 11 NS:500
-     EIO  DISK HR:       0 MN: 0 SC: 0 MS:  1 mS:127 NS:500
-     EIO  DISK HR:       0 MN: 0 SC: 0 MS: 14 mS:360 NS:800
-     END  U003 HR:       0 MN: 0 SC: 0 MS: 14 mS:379 NS:300
-     SIO  U003 HR:       0 MN: 0 SC: 0 MS: 14 mS:396 NS:300
-     SIO  U003 HR:       0 MN: 0 SC: 0 MS: 14 mS:402 NS:800
-     END  U003 HR:       0 MN: 0 SC: 0 MS: 14 mS:410 NS:300
-     EIO  DISK HR:       0 MN: 0 SC: 0 MS: 17 mS:694 NS:100
-     SIO  U004 HR:       0 MN: 0 SC: 0 MS: 17 mS:700 NS:100
-     END  U004 HR:       0 MN: 0 SC: 0 MS: 17 mS:712 NS:100
-     EIO  DISK HR:       0 MN: 0 SC: 0 MS: 18 mS:694 NS:100
-     EIO  PRNT HR:       0 MN: 0 SC: 0 MS: 20 mS: 11 NS:500
-     EIO  PRNT HR:       0 MN: 0 SC: 0 MS: 35 mS: 11 NS:500
-     SIO  U001 HR:       0 MN: 0 SC: 0 MS: 35 mS: 20 NS:500
-     SIO  U001 HR:       0 MN: 0 SC: 0 MS: 35 mS: 23 NS:  0
-     WIO  U001 HR:       0 MN: 0 SC: 0 MS: 35 mS: 32 NS:500
-     EIO  PRNT HR:       0 MN: 0 SC: 0 MS: 55 mS: 11 NS:500
-     EIO  PRNT HR:       0 MN: 0 SC: 1 MS:500 mS:  0 NS:  0
-     SIO  U004 HR:       0 MN: 0 SC: 1 MS:730 mS:  0 NS:  0
-     WIO  U004 HR:       0 MN: 0 SC: 1 MS:955 mS:  0 NS:  0
-     EIO  PRNT HR:       0 MN: 0 SC: 2 MS:147 mS:483 NS:647
-     EIO  PRNT HR:       0 MN: 0 SC: 2 MS:147 mS:483 NS:647
-     END  U001 HR:       0 MN: 0 SC: 2 MS:147 mS:483 NS:647
-     EIO  DISK HR:       0 MN: 0 SC: 2 MS:147 mS:483 NS:647
-     EIO  PRNT HR:       0 MN: 0 SC: 2 MS:147 mS:483 NS:647
-     END  U004 HR:       0 MN: 0 SC: 2 MS:147 mS:483 NS:647
-     SIO  U004 HR:       0 MN: 0 SC: 2 MS:147 mS:483 NS:647
+   SEGMENT #0 OF PROGRAM BOOT OF PROCESS BOOT
+   ACCBITS: 1  LENGTH: 4
+   MEM ADDR  OPCODE  OPERAND
+   --------  ------  -------
+          0  SIO     75      
+          1  DISK    2000    
+          2  SKIP    0       
+          3  JUMP    [2,0]
+   SEGMENT #1 OF PROGRAM BOOT OF PROCESS BOOT
+   ACCBITS: 3  LENGTH: 8
+   MEM ADDR  OPCODE  OPERAND
+   --------  ------  -------
+          4  SKIP    1       
+          5  JUMP    [3,0]
+          6  SKIP    0       
+          7  JUMP    [2,6]
+   SEGMENT #2 OF PROGRAM BOOT OF PROCESS BOOT
+   ACCBITS: 0  LENGTH: 0
+   MEM ADDR  OPCODE  OPERAND
+   --------  ------  -------
+          8  SIO     400     
+          9  PRNT    150     
+         10  WIO     500     
+         11  REQ     [0,1]
+         12  WIO     0       
+         13  REQ     [2,1]
+         14  SKIP    0       
+         15  JUMP    [1,0]
+   SEGMENT #3 OF PROGRAM BOOT OF PROCESS BOOT
+   ACCBITS: 0  LENGTH: 0
+   MEM ADDR  OPCODE  OPERAND
+   --------  ------  -------
+         16  END     20      
+ LOGON  U001   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
                               TERMINAL  SUMMARY                             
  ============================================================================
  TERMNL|      EXEC      |      WAIT    |    BLOCKED   |    ELAPSED   |  %EFF

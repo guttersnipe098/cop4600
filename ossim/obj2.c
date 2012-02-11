@@ -1,6 +1,6 @@
 /*******************************************************************************
 * File:      obj2.c
-* Version:   0.3
+* Version:   0.4
 * Purpose:   Implements loading the event list
 * Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
 *            Sean Szumlanski
@@ -207,116 +207,12 @@ Boot( )
 
 		}
 
-	}
-
-	/**************************
-	* DISPLAY MEMORY SEGMENTS *
-	**************************/
-	// TODO: move to function
-	
-	// TODO: remove debug block
-	//printf( "start\n" );
-	//printf( "0 opcode:%s\n", Op_Names[ Mem[0].opcode ] );
-	//printf( "0 operand:%s\n", Mem[0].operand.burst );
-	//printf( "end\n" );
-
-	int counter = 0;
-	// loop through each segment in memory
-	for( int i=0; i<Max_Segments; i++) {
-
-		// are we iterating outside the number of segments we have?
-		if( i >= num_segments ){
-			// we have already printed all segments; stop looping
-			break;
-		}
-
-		printf( "   SEGMENT #%d OF PROGRAM BOOT OF PROCESS BOOT\n", i );
-		printf( "   ACCBITS: %d  LENGTH: %u\n",
-		 Mem_Map[i].access, Mem_Map[i].size
-		);
-		printf( "   MEM ADDR  OPCODE  OPERAND\n" );
-		printf( "   --------  ------  -------\n" );
-
-		// loop through each instruction in this segment
-		for( int j=0; j<Mem_Map[ Max_Segments + i ].size; j++ ){
-
-			// DECLARE VARIABLES
-			int element = Mem_Map[ Max_Segments + i ].base + j;
-			int opcode;
-
-			// TODO: remove debug
-			//printf( "Mem_Map[%d]\n", Max_Segments + i );
-			//printf( "Mem[%d]\n", element );
-
-			// MEM ADDR
-			printf( "\t%d ", counter );
-
-			// OPCODE
-			opcode = Mem[element].opcode;
-
-			// is this an operation or a device?
-			if( opcode < NUM_OPCODES ){
-				// this is an operation; print its name
-				printf( "%s ", Op_Names[ opcode ] );
-			} else {
-				// this is a device; print its name
-				printf( "%s ", Dev_Table[ opcode - NUM_OPCODES ].name );
-			}
-
-			// OPERAND
-			switch( opcode ){
-				case SIO_OP:
-				case WIO_OP:
-				case END_OP:
-					// burst
-					printf( "%lu", Mem[element].operand.burst );
-					break;
-
-				case REQ_OP:
-				case JUMP_OP:
-					// address
-					printf( "[%d,%u]", 
-			 		 Mem[element].operand.address.segment,
-			 		 Mem[element].operand.address.offset
-					);
-					break;
-
-				case SKIP_OP:
-					// count
-					printf( "%u", Mem[element].operand.count );
-					break;
-
-				default:
-					// bytes
-					printf( "%lu", Mem[element].operand.bytes );
-			}
-
-			printf( "\n" );
-
-			//printf( "\t%d %s %s\n",
-			//printf( "\t%d %s\n",
-			 //counter,
-			 //Op_Names[ Mem[ Mem_Map[i].base ].opcode ],
-			 //Mem[ Mem_Map[element].base ].opcode,
-			 //Mem[ Mem_Map[element].base ].operand
-			 //Op_Names[ Mem[ Mem_Map[element].base ].opcode ],
-			 //Mem[ Mem_Map[element].base + j ].opcode,
-			 //Op_Names[ Mem[ element ].opcode ]
-			 //Mem[ element ].operand
-			//);
-			counter++;
-
-		}
-
-		printf("\n");
+		/**************************
+		* DISPLAY MEMORY SEGMENTS *
+		**************************/
+		Display_pgm( &Mem_Map[element], i, NULL );
 
 	}
-
-/*
-		Display each segment of memory
-			Display segment Mem_Map[i + Max_Segments] since kernel resides in
-			Upper half of Mem_Map; pass NULL as PCB since OS has no PCB
-*/
 
 	return;
 
@@ -374,8 +270,6 @@ Boot( )
 void
 Get_Instr( int prog_id, struct instr_type* instruction )
 {
-	// TODO: remove debug line
-	//printf( "called Get_Inst()!\n" );
 
 	// DECLARE VARIABLES
 	char opcode_str[BUFSIZ], operand_str[BUFSIZ];
@@ -385,8 +279,6 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 
 	// convert to upper case
 	strncpy( opcode_str,  strupr( opcode_str ),  sizeof(opcode_str) );
-	// TODO: delete if unnecessary
-	//strncpy( operand_str, strlwr( operand_str ), sizeof(operand_str) );
 
 	/**************************
 	* DETERMINE THE OPCODE ID *
@@ -983,6 +875,99 @@ Write( struct instr_type* instruction )
 void
 Display_pgm( segment_type* seg_table, int seg_num, pcb_type* pcb )
 {
+
+	// DELCARE VARIABLES
+	int counter;
+
+	// TODO: remove debug block
+	//printf( "start\n" );
+	//printf( "0 opcode:%s\n", Op_Names[ Mem[0].opcode ] );
+	//printf( "0 operand:%s\n", Mem[0].operand.burst );
+	//printf( "end\n" );
+
+	// loop through each segment in memory
+	counter = 0;
+	// TODO: for obj3: change hard-coded BOOT below to user's program name if not null
+	print_out( "   SEGMENT #%d OF PROGRAM BOOT OF PROCESS BOOT\n", seg_num );
+	print_out( "   ACCBITS: %d  LENGTH: %u\n",
+	 seg_table[seg_num].access, seg_table[seg_num].size
+	);
+	print_out( "   MEM ADDR  OPCODE  OPERAND\n" );
+	print_out( "   --------  ------  -------\n" );
+
+	// loop through each instruction in this segment
+	for( int i=0; i<(seg_table->size); i++ ){
+
+		// DECLARE VARIABLES
+		int element = seg_table->base + i;
+		int opcode;
+
+		// TODO: remove debug
+		//printf( "Mem_Map[%d]\n", Max_Segments + i );
+		//printf( "Mem[%d]\n", element );
+
+		// MEM ADDR
+		print_out( "%11d ", element );
+
+		// OPCODE
+		opcode = Mem[element].opcode;
+
+		// is this an operation or a device?
+		if( opcode < NUM_OPCODES ){
+			// this is an operation; print its name
+			print_out( " %-6s ", Op_Names[ opcode ] );
+		} else {
+			// this is a device; print its name
+			print_out( " %-6s ", Dev_Table[ opcode - NUM_OPCODES ].name );
+		}
+
+		// OPERAND
+		switch( opcode ){
+			case SIO_OP:
+			case WIO_OP:
+			case END_OP:
+				// burst
+				print_out( " %-8lu", Mem[element].operand.burst );
+				break;
+
+			case REQ_OP:
+			case JUMP_OP:
+				// address
+				print_out( " [%d,%u]", 
+		 		 Mem[element].operand.address.segment,
+		 		 Mem[element].operand.address.offset
+				);
+				break;
+
+			case SKIP_OP:
+				// count
+				print_out( " %-8u", Mem[element].operand.count );
+				break;
+
+			default:
+				// bytes
+				print_out( " %-8lu", Mem[element].operand.bytes );
+		}
+
+		print_out( "\n" );
+
+		//printf( "\t%d %s %s\n",
+		//printf( "\t%d %s\n",
+		 //counter,
+		 //Op_Names[ Mem[ Mem_Map[i].base ].opcode ],
+		 //Mem[ Mem_Map[element].base ].opcode,
+		 //Mem[ Mem_Map[element].base ].operand
+		 //Op_Names[ Mem[ Mem_Map[element].base ].opcode ],
+		 //Mem[ Mem_Map[element].base + j ].opcode,
+		 //Op_Names[ Mem[ element ].opcode ]
+		 //Mem[ element ].operand
+		//);
+		counter++;
+
+	}
+
+	print_out("\n");
+
 }
 
 /**
