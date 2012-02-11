@@ -1,6 +1,6 @@
 /*******************************************************************************
 * File:      obj2.c
-* Version:   0.2
+* Version:   0.3
 * Purpose:   Implements loading the event list
 * Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
 *            Sean Szumlanski
@@ -255,14 +255,99 @@ void
 Get_Instr( int prog_id, struct instr_type* instruction )
 {
 	// TODO: remove debug line
-	printf( "called Get_Inst()!\n" );
+	//printf( "called Get_Inst()!\n" );
 
 	// DECLARE VARIABLES
-	//TODO: replace as needed
-	char line[BUFSIZ];
+	char opcode_str[BUFSIZ], operand_str[BUFSIZ];
 
-	fgets( line, sizeof(line), Prog_Files[prog_id] );
-	printf( "\t%s", line );
+	// get the opcode & operands as strings from the given location
+	fscanf( Prog_Files[prog_id], "%s %s", &opcode_str, &operand_str );
+
+	// convert to upper case
+	strncpy( opcode_str,  strupr( opcode_str ),  sizeof(opcode_str) );
+	// TODO: delete if unnecessary
+	//strncpy( operand_str, strlwr( operand_str ), sizeof(operand_str) );
+
+	/**************************
+	* DETERMINE THE OPCODE ID *
+	**************************/
+	instruction->opcode = -1;
+
+	// loop through all possible opcode names
+	for( int i=0; i<NUM_OPCODES; i++ ){
+
+		// does the opcode match this iteration's opcode name?
+		if( strncmp( opcode_str, Op_Names[i], sizeof(Op_Names[i]) ) == 0 ){
+			// this opcode is matches this iteration's opcode name
+			instruction->opcode = i;
+		}
+
+	}
+
+	/************************
+	* DETERMINE THE OPERAND *
+	************************/
+
+	// TODO; remove debug lines
+	printf( "\tstrings:\t%s|%s\n", opcode_str, operand_str );
+	printf( "\topcode id:%d\n", instruction->opcode );
+
+	// did we find an opcode for this instruction?
+	if( instruction->opcode != -1 ){
+		// we found an opcode for this instruction
+
+		switch( instruction->opcode ){
+			case SIO_OP:
+			case WIO_OP:
+			case END_OP:
+				sscanf( operand_str, "%lu", &instruction->operand.burst );
+				break;
+
+			case REQ_OP:
+			case JUMP_OP:
+				sscanf( operand_str, "[%d,%u]",
+			 	&instruction->operand.address.segment,
+			 	&instruction->operand.address.offset
+				);
+				break;
+
+			default:
+				sscanf( operand_str, "%u", &instruction->operand.count );
+				break;
+		}
+
+	} else {
+		// we could not find an opcode for this instruction; might be a device..
+
+		// loop through every known device
+		for( int i=0; i<Num_Devices; i++ ){
+	
+			// TODO: remove debug
+			//printf( "comparing:|%s|%s|\n", opcode_str, Dev_Table[i].name );
+
+			// does the opcode match this device?
+			if(
+			 strncmp(
+			  opcode_str, Dev_Table[i].name, DEV_NAME_LENGTH
+			 ) == 0
+			){
+				// this device is our opcode
+	
+				// we return this device's index + the number of terminals + 1
+				// because the devices agents IDs follow the user agent IDs
+				instruction->opcode = NUM_OPCODES + i;
+				sscanf( operand_str, "%lu", &instruction->operand.bytes );
+			}
+
+		}
+
+	} // endif( did we find an opcode for this instruction? )
+
+	// did we determine the instruction yet?
+	if( instruction->opcode == -1 ){
+		// we did not determine the instruction! error & exit.
+		err_quit( "Failed to determine instruction opcode!" );
+	}
 
 	return;
 
