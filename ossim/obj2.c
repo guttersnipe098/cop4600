@@ -559,6 +559,7 @@ Cpu( )
 
 	// DECLARE VARIABLES
 	int agent_id;
+	struct instr_type instruction;
 
 	/********************
 	* Identify Agent ID *
@@ -582,7 +583,11 @@ Cpu( )
 */
 	while( true ){
 
-		//Set_MAR()
+		// setting MAR to the CPU's program counter
+		Set_MAR( &CPU.state.pc );
+
+		// fetch next instruction
+		Fetch( &instruction );
 
 	}
 
@@ -678,8 +683,34 @@ Exec_Program( struct state_type* state )
 int
 Memory_Unit( )
 {
-	// temporary return value
-	return( 0 );
+
+	// DECLARE VARIABLES
+	int segment;
+
+	// are we in kernel mode?
+	if( CPU.state.mode == 1 ){
+		// we are in kernel mode; setting segment to the upper half of Mem_Map
+		segment = MAR.segment + Max_Segments;
+	} else {
+		// we are in user mode
+		segment = MAR.segment;
+	}
+
+	// illegal memory address check
+	if( Mem_Map[segment].access == 0 ){
+		Add_Event( SEGFAULT_EVT, CPU.active_pcb->term_pos + 1, &Clock );
+		return -1;
+	}
+
+	// address out of bounds check
+	if( MAR.offset > Mem_Map[segment].size ){
+		Add_Event( ADRFAULT_ENV, CPU.active_pcb->term_pos + 1, &Clock );
+		return -1;
+	}
+
+	// calculate physical memory address
+	return (Mem_Map[segment].base + MAR.offset);
+
 }
 
 /**
@@ -726,8 +757,14 @@ Set_MAR( struct addr_type* addr )
 int
 Fetch( struct instr_type* instruction )
 {
+
+	// DECLARE VARIABLES
+	int physical_address;
+
+	phy
+	
 	// temporary return value
-	return( 0 );
+	return 1;
 }
 
 /**
