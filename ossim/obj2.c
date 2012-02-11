@@ -600,43 +600,48 @@ Cpu( )
 				Burst_time( instruction.operand.burst, &sim_time );
 				Add_time( &Clock, &sim_time );
 				Add_Event( SIO_EVT, agent_id, &sim_time );
-				CPU.state.pc = CPU.state.pc + 2; // skip next instruction
+				CPU.state.pc.offset = CPU.state.pc.offset + 2; // skip next instr
 				return;
 
 			case WIO_OP:
 				Burst_time( instruction.operand.burst, &sim_time );
 				Add_time( &Clock, &sim_time );
 				Add_Event( WIO_EVT, agent_id, &sim_time );
-				CPU.state.pc = CPU.state.pc + 2; // skip next instruction
+				CPU.state.pc.offset = CPU.state.pc.offset + 2; // skip next instr
 				return;
 
 			case END_OP:
 				Burst_time( instruction.operand.burst, &sim_time );
 				Add_time( &Clock, &sim_time );
 				Add_Event( END_EVT, agent_id, &sim_time );
-				CPU.state.pc = CPU.state.pc + 2; // skip next instruction
+				CPU.state.pc.offset = CPU.state.pc.offset + 2; // skip next instr
 				return;
 
 			case SKIP_OP:
 				if( instruction.operand.count > 0 ){
-					instruction.operand.count = insturction.operand.count - 1;
+					instruction.operand.count = instruction.operand.count - 1;
+
+					result = Write( &instruction );
+					// did Write() finish OK?
+					if( result != 0 ){
+						// Write() encountered a fault
+						return;
+					}
+
+					CPU.state.pc.offset = CPU.state.pc.offset + 2; // skip next instr
+				}
+
+				CPU.state.pc.offset = CPU.state.pc.offset + 1; // execute next JUMP
+				break;
+
+			case JUMP_OP:
+				CPU.state.pc.segment = instruction.operand.address.segment;
+				CPU.state.pc.offset = instruction.operand.address.offset;
+				break;
 
 		}
 
 	}
-
-/*
-			If SKIP instruction
-				If count > 0,
-					Decrement count by 1
-					Write this change to memory by calling Write()
-					If write returns a negative value, a fault has occurred, so
-						Return
-					Increment the CPU's PC by 2 since the next instruction is to be skipped
-				Otherwise, instruction count equals 0, so
-					Increment the CPU's PC by 1 since the next instruction, JUMP, is to be executed
-				Continue looping
-*/
 
 /*
 			If JUMP instruction
