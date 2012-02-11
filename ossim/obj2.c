@@ -560,6 +560,7 @@ Cpu( )
 	// DECLARE VARIABLES
 	int agent_id;
 	struct instr_type instruction;
+	struct time_type sim_time;
 	int result; // stores results from functions to check for errors
 
 	/********************
@@ -575,13 +576,10 @@ Cpu( )
 		agent_id = CPU.active_pcb->term_pos + 1;
 	}
 
-/*
-	Loop forever doing the following:
-		Set MAR to CPU's program counter
-		Fetch instruction at this address
-		If fetch returns a negative value, a fault has occurred, so
-			Return
-*/
+	/*************
+	* Iterate PC *
+	*************/
+
 	while( 1 ){
 
 		// setting MAR to the CPU's program counter
@@ -595,18 +593,37 @@ Cpu( )
 			return;
 		}
 
-	}
+		// what kind of operation are we preforming?
+		switch( instruction.opcode ){
 
-/*
-		Determine type of instruction to execute
-			If SIO, WIO, or END instruction
-				If the objective is 3 or higher
-					Increment total number of burst cycles for PCB
-				Calculate when I/O event will occur using current time + burst time
-				Add event to event list
-				Increment PC by 2 to skip the next instruction--device instruction
-				Return from Cpu() (exit from loop)
-*/
+			case SIO_OP:
+				Burst_time( instruction.operand.burst, &sim_time );
+				Add_time( &Clock, &sim_time );
+				Add_Event( SIO_EVT, agent_id, &sim_time );
+				CPU.state.pc = CPU.state.pc + 2; // skip next instruction
+				return;
+
+			case WIO_OP:
+				Burst_time( instruction.operand.burst, &sim_time );
+				Add_time( &Clock, &sim_time );
+				Add_Event( WIO_EVT, agent_id, &sim_time );
+				CPU.state.pc = CPU.state.pc + 2; // skip next instruction
+				return;
+
+			case END_OP:
+				Burst_time( instruction.operand.burst, &sim_time );
+				Add_time( &Clock, &sim_time );
+				Add_Event( END_EVT, agent_id, &sim_time );
+				CPU.state.pc = CPU.state.pc + 2; // skip next instruction
+				return;
+
+			case SKIP_OP:
+				if( instruction.operand.count > 0 ){
+					instruction.operand.count = insturction.operand.count - 1;
+
+		}
+
+	}
 
 /*
 			If SKIP instruction
@@ -853,8 +870,48 @@ Read( struct instr_type* instruction )
 int
 Write( struct instr_type* instruction )
 {
-	// temporary return value
-	return( 0 );
+
+	// DECLARE VARIALBES
+	int physical_address;
+
+	physical_address = Memory_Unit();
+
+	// is this address sane?
+	if( physical_address < 0 ){
+		// this address is illegal; return fault
+		return -1;
+	}
+
+	// OPCODE
+	Mem[ physical_address ].opcode = instruction->opcode;
+
+	// OPERAND
+	switch( instruction->opcode ){
+		case SIO_OP:
+		case WIO_OP:
+		case END_OP:
+			Mem[ physical_address ].operand.burst = instruction->operand.burst;
+			break;
+
+		case REQ_OP:
+		case JUMP_OP:
+			Mem[ physical_address ].operand.address.segment =
+			 instruction->operand.address.segment;
+			Mem[ physical_address ].operand.address.offset =
+			 instruction->operand.address.offset;
+			break;
+
+		case SKIP_OP:
+			Mem[ physical_address ].operand.count = instruction->operand.count;
+			break;
+
+		default:
+			Mem[ physical_address ].operand.bytes = instruction->operand.bytes;
+			break;
+	}
+
+	return 1;
+
 }
 
 /**
