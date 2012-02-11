@@ -572,6 +572,15 @@ Cpu( )
 void
 Exec_Program( struct state_type* state )
 {
+
+	// copy paramater data to CPU struct
+	CPU.state.mode = state->mode;
+	CPU.state.pc.segment = state->pc.segment;
+	CPU.state.pc.offset = state->pc.offset;
+
+	// awake the great Central Processing Unit!
+	Cpu();
+
 }
 
 /**
