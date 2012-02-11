@@ -556,6 +556,66 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 void
 Cpu( )
 {
+
+	// DECLARE VARIABLES
+	int agent_id;
+
+	/********************
+	* Identify Agent ID *
+	********************/
+
+	// is the program boot?
+	if( CPU.active_pcb == NULL ){
+		// there is no active PCB; the program is boot (0 is our special case)
+		agent_id = 0;
+	} else {
+		// there *is* an active PCB; get its terminal id (+1 because boot is 0)
+		agent_id = CPU.active_pcb->term_pos + 1;
+	}
+
+/*
+	Loop forever doing the following:
+		Set MAR to CPU's program counter
+		Fetch instruction at this address
+		If fetch returns a negative value, a fault has occurred, so
+			Return
+*/
+	while( true ){
+
+		//Set_MAR()
+
+	}
+
+/*
+		Determine type of instruction to execute
+			If SIO, WIO, or END instruction
+				If the objective is 3 or higher
+					Increment total number of burst cycles for PCB
+				Calculate when I/O event will occur using current time + burst time
+				Add event to event list
+				Increment PC by 2 to skip the next instruction--device instruction
+				Return from Cpu() (exit from loop)
+*/
+
+/*
+			If SKIP instruction
+				If count > 0,
+					Decrement count by 1
+					Write this change to memory by calling Write()
+					If write returns a negative value, a fault has occurred, so
+						Return
+					Increment the CPU's PC by 2 since the next instruction is to be skipped
+				Otherwise, instruction count equals 0, so
+					Increment the CPU's PC by 1 since the next instruction, JUMP, is to be executed
+				Continue looping
+*/
+
+/*
+			If JUMP instruction
+				Set the PC for the CPU so that the program jumps to the address determined by the operand of instruction
+				Continue looping
+*/
+
 }
 
 /**
@@ -638,6 +698,10 @@ Memory_Unit( )
 void
 Set_MAR( struct addr_type* addr )
 {
+
+	MAR.segment = addr->segment;
+	MAR.offset = addr->offset;
+
 }
 
 /**
