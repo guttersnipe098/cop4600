@@ -120,7 +120,7 @@ Boot( )
 	// get the number of segments defined in this file
 	fscanf( Prog_Files[BOOT], "PROGRAM %d\n", &num_segments );
 	// TODO: remove debug print
-	printf( "%d\n",num_segments );
+	//printf( "%d\n",num_segments );
 
 	/**************************
 	* GET SEGMENT DEFINITIONS *
@@ -144,7 +144,7 @@ Boot( )
 		 &size_of_segment, &access_bit
 		);
 		// TODO: remove debug print
-		printf( "%d %x\n", size_of_segment, access_bit );
+		//printf( "%d %x\n", size_of_segment, access_bit );
 
 		// Mem_Map[].size
 		Mem_Map[element].size   = size_of_segment;
@@ -167,7 +167,7 @@ Boot( )
 		}
 
 		// TODO: remove debug
-		printf( "setting base of Mem_Map[ %d ] = %d\n", element, Mem_Map[element].base );
+		//printf( "setting base of Mem_Map[ %d ] = %d\n", element, Mem_Map[element].base );
 
 		// update memory pointers
 		Total_Free     = Total_Free     - size_of_segment;
@@ -201,7 +201,7 @@ Boot( )
 			// in this segment
 
 			// TODO: remove debug
-			printf( "calling Get_Instr() w Mem[ %d ]", Mem_Map[element].base+j );
+			//printf( "calling Get_Instr() w Mem[ %d ]", Mem_Map[element].base+j );
 
 			Get_Instr( BOOT, &Mem[ Mem_Map[element].base + j ] );
 
@@ -215,10 +215,10 @@ Boot( )
 	// TODO: move to function
 	
 	// TODO: remove debug block
-	printf( "start\n" );
-	printf( "0 opcode:%s\n", Op_Names[ Mem[0].opcode ] );
+	//printf( "start\n" );
+	//printf( "0 opcode:%s\n", Op_Names[ Mem[0].opcode ] );
 	//printf( "0 operand:%s\n", Mem[0].operand.burst );
-	printf( "end\n" );
+	//printf( "end\n" );
 
 	int counter = 0;
 	// loop through each segment in memory
@@ -409,7 +409,7 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 	************************/
 
 	// TODO; remove debug lines
-	printf( "\tstrings:\t%s|%s\n", opcode_str, operand_str );
+	//printf( "\tstrings:\t%s|%s\n", opcode_str, operand_str );
 
 	// did we find an opcode for this instruction?
 	if( instruction->opcode != -1 ){
@@ -463,7 +463,7 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 	} // endif( did we find an opcode for this instruction? )
 
 	// TODO: remove debug
-	printf( "\topcode id:%d\n", instruction->opcode );
+	//printf( "\topcode id:%d\n", instruction->opcode );
 
 	// did we determine the instruction yet?
 	if( instruction->opcode == -1 ){
