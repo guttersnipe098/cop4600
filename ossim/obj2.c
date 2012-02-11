@@ -560,6 +560,7 @@ Cpu( )
 	// DECLARE VARIABLES
 	int agent_id;
 	struct instr_type instruction;
+	int result; // stores results from functions to check for errors
 
 	/********************
 	* Identify Agent ID *
@@ -587,7 +588,12 @@ Cpu( )
 		Set_MAR( &CPU.state.pc );
 
 		// fetch next instruction
-		Fetch( &instruction );
+		result = Fetch( &instruction );
+
+		// did fetch finish OK?
+		if( result != 0 ){
+			return;
+		}
 
 	}
 
@@ -778,7 +784,7 @@ Fetch( struct instr_type* instruction )
 		case SIO_OP:
 		case WIO_OP:
 		case END_OP:
-			instruction->operand.burst = Mem[ physical_address ].operand.burst
+			instruction->operand.burst = Mem[ physical_address ].operand.burst;
 			break;
 
 		case REQ_OP:
