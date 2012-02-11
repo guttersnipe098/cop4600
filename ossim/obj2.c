@@ -581,7 +581,7 @@ Cpu( )
 		If fetch returns a negative value, a fault has occurred, so
 			Return
 */
-	while( true ){
+	while( 1 ){
 
 		// setting MAR to the CPU's program counter
 		Set_MAR( &CPU.state.pc );
@@ -704,7 +704,7 @@ Memory_Unit( )
 
 	// address out of bounds check
 	if( MAR.offset > Mem_Map[segment].size ){
-		Add_Event( ADRFAULT_ENV, CPU.active_pcb->term_pos + 1, &Clock );
+		Add_Event( ADRFAULT_EVT, CPU.active_pcb->term_pos + 1, &Clock );
 		return -1;
 	}
 
@@ -761,8 +761,43 @@ Fetch( struct instr_type* instruction )
 	// DECLARE VARIABLES
 	int physical_address;
 
-	phy
-	
+	// get the current physical memory address
+	physical_address = Memory_Unit();
+
+	// is this physical_address sane?
+	if( physical_address < 0 ){
+		// this address is not sane; return fail
+		return -1;
+	}
+
+	// OPCODE
+	instruction->opcode = Mem[ physical_address ].opcode;
+
+	// OPERAND
+	switch( instruction->opcode ){
+		case SIO_OP:
+		case WIO_OP:
+		case END_OP:
+			instruction->operand.burst = Mem[ physical_address ].operand.burst
+			break;
+
+		case REQ_OP:
+		case JUMP_OP:
+			instruction->operand.address.segment =
+			 Mem[ physical_address ].operand.address.segment;
+			instruction->operand.address.offset =
+			 Mem[ physical_address ].operand.address.offset;
+			break;
+
+		case SKIP_OP:
+			instruction->operand.count = Mem[ physical_address ].operand.count;
+			break;
+
+		default:
+			instruction->operand.bytes = Mem[ physical_address ].operand.bytes;
+			break;
+	}
+
 	// temporary return value
 	return 1;
 }
