@@ -1,16 +1,16 @@
 
  +-----------------------------------------------------+
  |  COP 4600                          Simulator Report |
- |  DATE:  Fri Jan 27 22:04:48 2012                    |
- |  NAME:  data1                                       |
+ |  DATE:  Fri Feb 10 19:34:58 2012                    |
+ |  NAME:  data2                                       |
  |                                                     |
- |  OBJECTIVE # ...........................1           |
- |  LOGON TIME UNITS ......................NSEC        |
- |  NO. OF TERMINALS ......................4           |
- |  MEMORY SIZE ...........................1000        |
- |  CPU RATE ( NSEC/INSTR ) ...............500         |
+ |  OBJECTIVE # ...........................2           |
+ |  LOGON TIME UNITS ......................MSEC        |
+ |  NO. OF TERMINALS ......................1           |
+ |  MEMORY SIZE ...........................200         |
+ |  CPU RATE ( NSEC/INSTR ) ...............2000        |
  |  SCHEDULING ALGORITHM ..................FCFS        |
- |  MAX SCRIPT LENGTH .....................2           |
+ |  MAX SCRIPT LENGTH .....................5           |
  |                                                     |
  |  DEBUG MEMORY ..........................OFF         |
  |  DEBUG EVENT ...........................OFF         |
@@ -23,101 +23,62 @@
  |                                                     |
  |  ID      RATE (*)                                   |
  |                                                     |
- |  PRNT    10                                         |
- |  DISK    300                                        |
+ |  PRNT    400                                        |
+ |  DISK    3000                                       |
  |                                                     |
  | (*) Bytes/Second                                    |
  +-----------------------------------------------------+
 
  EVENT  AGENT  HR:xxxxxxxx MN:xx SC:xx MS:xxx mS:xxx NS:xxx
  -----  -----  ----------- ----- ----- ------ ------ ------
+	SEGMENT #0 OF PROGRAM BOOT OF PROCESS BOOT
+	ACCBITS: 01  LENGTH: 4
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     75
+	       1  DISK    2000
+	       2  SKIP    0
+	       3  JUMP    [2,0]
+
+	SEGMENT #1 OF PROGRAM BOOT OF PROCESS BOOT
+	ACCBITS: 02  LENGTH: 4
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       4  SKIP    1
+	       5  JUMP    [3,0]
+	       6  SKIP    0
+	       7  JUMP    [2,6]
+
+	SEGMENT #2 OF PROGRAM BOOT OF PROCESS BOOT
+	ACCBITS: 03  LENGTH: 8
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       8  SIO     400
+	       9  PRNT    150
+	      10  WIO     500
+	      11  REQ     [0,1]
+	      12  WIO     0
+	      13  REQ     [2,1]
+	      14  SKIP    0
+	      15  JUMP    [1,0]
+
+	SEGMENT #3 OF PROGRAM BOOT OF PROCESS BOOT
+	ACCBITS: 04  LENGTH: 1
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	      16  END     20
+
  LOGON  U001   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
 
- LOGON  U002   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
+ SIO    U000   HR:       0 MN: 0 SC: 0 MS:  0 mS:150 NS:  0
 
- LOGON  U003   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS: 25
+ SIO    U000   HR:       0 MN: 0 SC: 0 MS:  0 mS:950 NS:  0
 
- LOGON  U004   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS: 25
+ WIO    U000   HR:       0 MN: 0 SC: 0 MS:  1 mS:950 NS:  0
 
- SIO    U001   HR:       0 MN: 0 SC: 0 MS:  0 mS: 11 NS:500
+ WIO    U000   HR:       0 MN: 0 SC: 0 MS:  1 mS:950 NS:  0
 
- SIO    U001   HR:       0 MN: 0 SC: 0 MS:  0 mS: 27 NS:500
-
- WIO    U001   HR:       0 MN: 0 SC: 0 MS:  0 mS: 27 NS:500
-
- SIO    U002   HR:       0 MN: 0 SC: 0 MS:  0 mS: 41 NS:  0
-
- SIO    U002   HR:       0 MN: 0 SC: 0 MS:  0 mS: 48 NS:500
-
- END    U002   HR:       0 MN: 0 SC: 0 MS:  0 mS: 63 NS:500
-
- SIO    U003   HR:       0 MN: 0 SC: 0 MS:  0 mS: 68 NS:500
-
- WIO    U003   HR:       0 MN: 0 SC: 0 MS:  0 mS: 68 NS:500
-
- SIO    U004   HR:       0 MN: 0 SC: 0 MS:  0 mS: 77 NS:500
-
- WIO    U004   HR:       0 MN: 0 SC: 0 MS:  0 mS: 80 NS:  0
-
- EIO    DISK   HR:       0 MN: 0 SC: 0 MS:  0 mS:127 NS:500
-
- SIO    U001   HR:       0 MN: 0 SC: 0 MS:  0 mS:135 NS:  0
-
- END    U001   HR:       0 MN: 0 SC: 0 MS:  0 mS:143 NS:500
-
- EIO    PRNT   HR:       0 MN: 0 SC: 0 MS:  1 mS: 11 NS:500
-
- EIO    DISK   HR:       0 MN: 0 SC: 0 MS:  1 mS:127 NS:500
-
- EIO    DISK   HR:       0 MN: 0 SC: 0 MS: 14 mS:360 NS:800
-
- END    U003   HR:       0 MN: 0 SC: 0 MS: 14 mS:379 NS:300
-
- SIO    U003   HR:       0 MN: 0 SC: 0 MS: 14 mS:396 NS:300
-
- SIO    U003   HR:       0 MN: 0 SC: 0 MS: 14 mS:402 NS:800
-
- END    U003   HR:       0 MN: 0 SC: 0 MS: 14 mS:410 NS:300
-
- EIO    DISK   HR:       0 MN: 0 SC: 0 MS: 17 mS:694 NS:100
-
- SIO    U004   HR:       0 MN: 0 SC: 0 MS: 17 mS:700 NS:100
-
- END    U004   HR:       0 MN: 0 SC: 0 MS: 17 mS:712 NS:100
-
- EIO    DISK   HR:       0 MN: 0 SC: 0 MS: 18 mS:694 NS:100
-
- EIO    PRNT   HR:       0 MN: 0 SC: 0 MS: 20 mS: 11 NS:500
-
- EIO    PRNT   HR:       0 MN: 0 SC: 0 MS: 35 mS: 11 NS:500
-
- SIO    U001   HR:       0 MN: 0 SC: 0 MS: 35 mS: 20 NS:500
-
- SIO    U001   HR:       0 MN: 0 SC: 0 MS: 35 mS: 23 NS:  0
-
- WIO    U001   HR:       0 MN: 0 SC: 0 MS: 35 mS: 32 NS:500
-
- EIO    PRNT   HR:       0 MN: 0 SC: 0 MS: 55 mS: 11 NS:500
-
- EIO    PRNT   HR:       0 MN: 0 SC: 1 MS:500 mS:  0 NS:  0
-
- SIO    U004   HR:       0 MN: 0 SC: 1 MS:730 mS:  0 NS:  0
-
- WIO    U004   HR:       0 MN: 0 SC: 1 MS:955 mS:  0 NS:  0
-
- EIO    DISK   HR:       0 MN: 0 SC: 2 MS:500 mS:720 NS:950
-
- SIO    U004   HR:       0 MN: 0 SC: 2 MS:500 mS:810 NS:450
-
- END    U004   HR:       0 MN: 0 SC: 2 MS:500 mS:810 NS:950
-
- EIO    PRNT   HR:       0 MN: 0 SC: 2 MS:600 mS:200 NS: 11
-
- END    U001   HR:       0 MN: 0 SC: 2 MS:600 mS:200 NS: 18
-
- EIO    PRNT   HR:       0 MN: 0 SC: 2 MS:600 mS:400 NS:500
-
- EIO    PRNT   HR:       0 MN: 0 SC: 2 MS:600 mS:500 NS:  0
+ END    U000   HR:       0 MN: 0 SC: 0 MS:  1 mS:990 NS:  0
 
 
 

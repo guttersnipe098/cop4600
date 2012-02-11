@@ -122,6 +122,10 @@ Boot( )
 	// TODO: remove debug print
 	printf( "%d\n",num_segments );
 
+	/**************************
+	* GET SEGMENT DEFINITIONS *
+	**************************/
+
 	// loop through each SEGMENT definition
 	for( int i=0; i<num_segments; i++ ){
 
@@ -153,6 +157,7 @@ Boot( )
 		if( i == 0 ){
 			// this is the first element of Mem_Map; set the base to 0
 			Mem_Map[element].base = 0;
+
 		} else {
 			// this is not the first element of Mem_Map
 
@@ -161,12 +166,19 @@ Boot( )
 			 Mem_Map[ element - 1 ].base + Mem_Map[ element - 1 ].size;
 		}
 
+		// TODO: remove debug
+		printf( "setting base of Mem_Map[ %d ] = %d\n", element, Mem_Map[element].base );
+
 		// update memory pointers
 		Total_Free     = Total_Free     - size_of_segment;
 		Free_Mem->size = Free_Mem->size - size_of_segment;
 		Free_Mem->base = Free_Mem->base + size_of_segment;
 
 	} // end for( each SEGMENT definition )
+
+	/***************
+	* GET SEGMENTS *
+	***************/
 
 	// loop through each segment
 	for( int i=0; i<num_segments; i++ ){
@@ -187,11 +199,119 @@ Boot( )
 			// BOOT stream and the pointer to the instruction's future home in mem
 			// is the base of the current segment + the current instruction number
 			// in this segment
+
+			// TODO: remove debug
+			printf( "calling Get_Instr() w Mem[ %d ]", Mem_Map[element].base+j );
+
 			Get_Instr( BOOT, &Mem[ Mem_Map[element].base + j ] );
 
 		}
 
 	}
+
+	/**************************
+	* DISPLAY MEMORY SEGMENTS *
+	**************************/
+	// TODO: move to function
+	
+	// TODO: remove debug block
+	printf( "start\n" );
+	printf( "0 opcode:%s\n", Op_Names[ Mem[0].opcode ] );
+	//printf( "0 operand:%s\n", Mem[0].operand.burst );
+	printf( "end\n" );
+
+	int counter = 0;
+	// loop through each segment in memory
+	for( int i=0; i<Max_Segments; i++) {
+
+		// are we iterating outside the number of segments we have?
+		if( i >= num_segments ){
+			// we have already printed all segments; stop looping
+			break;
+		}
+
+		printf( "   SEGMENT #%d OF PROGRAM BOOT OF PROCESS BOOT\n", i );
+		printf( "   ACCBITS: %d  LENGTH: %u\n",
+		 Mem_Map[i].access, Mem_Map[i].size
+		);
+		printf( "   MEM ADDR  OPCODE  OPERAND\n" );
+		printf( "   --------  ------  -------\n" );
+
+		// loop through each instruction in this segment
+		for( int j=0; j<Mem_Map[ Max_Segments + i ].size; j++ ){
+
+			// DECLARE VARIABLES
+			int element = Mem_Map[ Max_Segments + i ].base + j;
+			int opcode;
+
+			// TODO: remove debug
+			//printf( "Mem_Map[%d]\n", Max_Segments + i );
+			//printf( "Mem[%d]\n", element );
+
+			// MEM ADDR
+			printf( "\t%d ", counter );
+
+			// OPCODE
+			opcode = Mem[element].opcode;
+
+			// is this an operation or a device?
+			if( opcode < NUM_OPCODES ){
+				// this is an operation; print its name
+				printf( "%s ", Op_Names[ opcode ] );
+			} else {
+				// this is a device; print its name
+				printf( "%s ", Dev_Table[ opcode - NUM_OPCODES ].name );
+			}
+
+			// OPERAND
+			switch( opcode ){
+				case SIO_OP:
+				case WIO_OP:
+				case END_OP:
+					// burst
+					printf( "%lu", Mem[element].operand.burst );
+					break;
+
+				case REQ_OP:
+				case JUMP_OP:
+					// address
+					printf( "[%d,%u]", 
+			 		 Mem[element].operand.address.segment,
+			 		 Mem[element].operand.address.offset
+					);
+					break;
+
+				case SKIP_OP:
+					// count
+					printf( "%u", Mem[element].operand.count );
+					break;
+
+				default:
+					// bytes
+					printf( "%lu", Mem[element].operand.bytes );
+			}
+
+			printf( "\n" );
+
+			//printf( "\t%d %s %s\n",
+			//printf( "\t%d %s\n",
+			 //counter,
+			 //Op_Names[ Mem[ Mem_Map[i].base ].opcode ],
+			 //Mem[ Mem_Map[element].base ].opcode,
+			 //Mem[ Mem_Map[element].base ].operand
+			 //Op_Names[ Mem[ Mem_Map[element].base ].opcode ],
+			 //Mem[ Mem_Map[element].base + j ].opcode,
+			 //Op_Names[ Mem[ element ].opcode ]
+			 //Mem[ element ].operand
+			//);
+			counter++;
+
+		}
+
+		printf("\n");
+
+	}
+
 /*
 		Display each segment of memory
 			Display segment Mem_Map[i + Max_Segments] since kernel resides in
@@ -290,7 +410,6 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 
 	// TODO; remove debug lines
 	printf( "\tstrings:\t%s|%s\n", opcode_str, operand_str );
-	printf( "\topcode id:%d\n", instruction->opcode );
 
 	// did we find an opcode for this instruction?
 	if( instruction->opcode != -1 ){
@@ -333,8 +452,8 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 			){
 				// this device is our opcode
 	
-				// we return this device's index + the number of terminals + 1
-				// because the devices agents IDs follow the user agent IDs
+				// we assign device's opcodes to be NUM_OPCODES + the device's id
+				// to prevent conflict with real operation instructions
 				instruction->opcode = NUM_OPCODES + i;
 				sscanf( operand_str, "%lu", &instruction->operand.bytes );
 			}
@@ -343,10 +462,13 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 
 	} // endif( did we find an opcode for this instruction? )
 
+	// TODO: remove debug
+	printf( "\topcode id:%d\n", instruction->opcode );
+
 	// did we determine the instruction yet?
 	if( instruction->opcode == -1 ){
 		// we did not determine the instruction! error & exit.
-		err_quit( "Failed to determine instruction opcode!" );
+		err_quit( "Failed to determine instruction opcode!\n" );
 	}
 
 	return;
