@@ -201,7 +201,7 @@ Boot( )
 			// in this segment
 
 			// TODO: remove debug
-			//printf( "calling Get_Instr() w Mem[ %d ]", Mem_Map[element].base+j );
+			printf( "calling Get_Instr() w Mem[ %d ]", Mem_Map[element].base+j );
 
 			Get_Instr( BOOT, &Mem[ Mem_Map[element].base + j ] );
 
@@ -301,7 +301,7 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 	************************/
 
 	// TODO; remove debug lines
-	//printf( "\tstrings:\t%s|%s\n", opcode_str, operand_str );
+	printf( "\tstrings:\t%s|%s\n", opcode_str, operand_str );
 
 	// did we find an opcode for this instruction?
 	if( instruction->opcode != -1 ){
@@ -334,7 +334,7 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 		for( int i=0; i<Num_Devices; i++ ){
 	
 			// TODO: remove debug
-			//printf( "comparing:|%s|%s|\n", opcode_str, Dev_Table[i].name );
+			printf( "comparing:|%s|%s|\n", opcode_str, Dev_Table[i].name );
 
 			// does the opcode match this device?
 			if(
@@ -348,6 +348,9 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 				// to prevent conflict with real operation instructions
 				instruction->opcode = NUM_OPCODES + i;
 				sscanf( operand_str, "%lu", &instruction->operand.bytes );
+
+				// exit the loop (there's no need to keep looking for a match)
+				break;
 			}
 
 		}

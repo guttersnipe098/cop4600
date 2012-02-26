@@ -16,7 +16,7 @@ JUMP   [2,6]
 
 
 SIO    400
-PRNT   150
+PRT1   150
 WIO    500
 REQ    [0,1]
 WIO    0

@@ -1,3 +1,22 @@
+/*******************************************************************************
+* File:      obj3.c
+* Version:   0.5
+* Purpose:   Read all remaining *.dat files, build PCB, load programs & service
+*            event interruption.
+* Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
+*            Sean Szumlanski
+* Coded by:  Michael Altfield <maltfield@knights.ucf.edu>
+* Course:    COP 4600 <http://www.cs.ucf.edu/courses/cop4600/spring2012>
+* Objective: 3
+* Created:   2012-02-25
+* Updated:   2012-02-25
+* Notes:     This program was written to be compiled against the gnu99 standard.
+*            Please execute the following commands to build correctly:
+*
+*  CFLAGS="-g -I/home/eurip/ossim2010 --std=gnu99"
+*  export CFLAGS
+*  make -e sim
+*******************************************************************************/
 /**
 	obj3.c
 
@@ -57,6 +76,16 @@ void print_free_list( );
 void
 Logon_Service( )
 {
+
+	// DECLARE VARIABLES
+	pcb_type* pcb;
+
+	pcb = (pcb_type*) malloc( sizeof(pcb_type) );
+
+	//printf( "%s", Clock );
+	//printf( "%s", Agent );
+	//printf( "%s", Event );
+
 }
 
 /**
