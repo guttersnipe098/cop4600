@@ -1,6 +1,6 @@
 /*******************************************************************************
 * File:      obj3.c
-* Version:   0.5
+* Version:   0.6
 * Purpose:   Read all remaining *.dat files, build PCB, load programs & service
 *            event interruption.
 * Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
@@ -9,7 +9,7 @@
 * Course:    COP 4600 <http://www.cs.ucf.edu/courses/cop4600/spring2012>
 * Objective: 3
 * Created:   2012-02-25
-* Updated:   2012-02-25
+* Updated:   2012-03-02
 * Notes:     This program was written to be compiled against the gnu99 standard.
 *            Please execute the following commands to build correctly:
 *
@@ -76,15 +76,39 @@ void print_free_list( );
 void
 Logon_Service( )
 {
+	// TODO remove debug prints
+	//printf( "\tAgent:|%d|\n", Agent );
 
 	// DECLARE VARIABLES
+	char* buf[BUFSIZ];
 	pcb_type* pcb;
 
 	pcb = (pcb_type*) malloc( sizeof(pcb_type) );
 
-	//printf( "%s", Clock );
-	//printf( "%s", Agent );
+	// STATUS
+	pcb->status= NEW_PCB;
+
+	// TERMINAL TABLE POS
+	pcb->term_pos = Agent - 1;
+
+	// LOGON TIME
+	pcb->logon_time = Clock;
+
+	// USER NAME
+	pcb->username[0] = 'U';
+	pcb->username[1] = '\0';
+	sprintf( (char*) buf, "%03d", Agent ); // TODO: use something more secure than sprintf
+	strncat( pcb->username, (char*) buf, BUFSIZ );
+
+	// TODO remove debug prints
+	printf( "\tpcb->username:|%s|\n", (char*) pcb->username );
+	//printf( "\tpcb->term_pos:|%d|\n", pcb->term_pos );
 	//printf( "%s", Event );
+
+	Term_Table[ pcb->term_pos ] = pcb;
+
+	Get_Script( pcb );
+	Next_pgm( pcb );
 
 }
 
@@ -131,6 +155,50 @@ Logon_Service( )
 void
 Get_Script( pcb_type *pcb )
 {
+
+	// DECLARE VARIABLES
+	char* line[BUFSIZ];
+
+	// Read each script name in file
+
+	// loop line-by-line until EOF
+	while( fgets( (char*) line, sizeof(line), Script_fp) ){
+
+		// DECLARE VARIABLES
+		char* script_name[BUFSIZ];
+
+		sscanf( (char*) line, "%s", &script_name );
+
+		// Stop reading script names when "LOGOFF" script name encountered
+
+		// is this script_name a LOGOFF script?
+		if( strcmp( script_name, "LOGOFF" ) == 0 ){
+			break;
+		}
+
+		// Capitalize script name so that case does not matter
+		script_name[-1] = strupr( (char*) script_name );
+
+		printf( "line:|%s|\n", script_name );
+
+		// Output name of the script to output file
+		print_out( script_name );
+		print_out( " " );
+
+		// Determine script ID for script name read
+
+		// loop though each possible program name
+		for( int i=0; i<NUM_PROGRAMS; i++ ){
+
+			// does this iteration's program name match the this pcb's script_name?
+			if( strcmp( script_name, Prog_Names[i] ) == 0 ){
+				pcb->script = i;
+				break;
+			}
+
+		}
+
+	}
 }
 
 /**
@@ -184,8 +252,75 @@ Get_Script( pcb_type *pcb )
 int
 Next_pgm( pcb_type* pcb )
 {
-	// temporary return value
-	return( 0 );
+
+	// If the next program is not the first program the user will run
+	//  && No unserviced I/O request blocks exist
+	// 	Deallocate memory used for the previous program--call Dealloc_pgm()
+
+	if( pcb->current_prog != 1 && pcb->rb_q == NULL ){
+		Dealloc_pgm( pcb );
+	}
+
+	// If process has an unserviced I/O request block
+	//  Do not load a new program
+
+	// is the process's IORB queue empty?
+	if( pcb->rb_q != NULL ){
+		// the queue is not empty; there exist unserviced IORB(s)
+		return 0;
+	}
+
+	// If encountered last program script
+	//  Mark PCB as terminated and do not load another program
+	//  Calculate total time logged on
+
+	// are we currently executing the last program?
+	if( pcb->current_prog == NUM_PROGRAMS ){
+
+		// set the pcb's status to TERMINATED
+		pcb->status = TERMINATED_PCB;
+
+		// calculate the difference between the logon time and the current time;
+		// save the result to pcb->total_logon_time
+		Diff_time( &Clock, &pcb->total_logon_time );
+
+		// do not load another program; simply return.
+		return 0;
+	}
+
+	// Allocate and initialize a new segment table for the PCB's program--call Get_Memory()
+
+	Get_Memory( pcb );
+
+	// If failed to allocate space (pcb->seg_table is NULL)
+	//  Do not load another program
+	if( pcb->seg_table == NULL ){
+		return 0;
+	}
+
+	// Load the next program into memory--call Loader()
+
+	Loader( pcb );
+
+	// Clear (set to 0) PCB's area for saving CPU information during an interrupt
+
+	pcb->cpu_save.mode = 0;
+	pcb->cpu_save.pc.segment = 0;
+	pcb->cpu_save.pc.offset = 0;
+
+	// Mark PCB as ready to run
+	pcb->status = READY_PCB;
+
+	//If objective 4 or greater
+	// Insert process into CPU's ready queue 
+
+	// TODO: something wicked this way comes in Obj 4
+
+	// Increment index position of program script for next call to Next_pgm()
+	pcb->current_prog = pcb->current_prog + 1;
+
+	return 1;
+
 }
 
 /**
@@ -248,6 +383,89 @@ Next_pgm( pcb_type* pcb )
 void
 Get_Memory( pcb_type* pcb )
 {
+
+	// DECLARE VARIABLES
+	int num_segments;
+	int base_ptr;
+
+	printf( "%d\n", pcb->current_prog );
+	//printf( "%d\n", pcb->script[ pcb->current_prog ] );
+
+	// Read the fields "PROGRAM" and number of segments from program file
+
+	// get the number of segments defined for this program
+	fscanf(
+	 Prog_Files[ pcb->script[pcb->current_prog] ],
+	 "PROGRAM %d\n",
+	 &num_segments
+	);
+
+	// Allocate pcb's segment table
+	pcb->seg_table = (struct segment_type*) malloc(
+	 sizeof(segment_type) * num_segments
+	);
+
+	// Read segment table information from program file:
+	//  For each segment in user's program
+
+	// loop through each SEGMENT definition
+	for( int i=0; i<num_segments; i++ ){
+
+		//		Read "SEGMENT size_of_segment access_bits" from program file
+		//		Set size of current segment
+		//		Set access bits of current segment
+
+		// get this segment's size & access bit
+		fscanf( Prog_Files[ pcb->script[pcb->current_prog] ], "SEGMENT %d %x\n",
+		 &pcb->seg_table[i].size,
+		 &pcb->seg_table[i].access
+		);
+
+		//		Increment amount of memory used
+
+		Total_Free = Total_Free - pcb->seg_table[i].size;
+
+		//		Go to next segment in user's segment table
+	}
+
+	// If program cannot fit into memory (total amount of free space < needed size)
+	// 	Clear user's segment table, which marks allocation failure
+	// 	Return without allocating a segment
+
+	if( Total_Free < 0 ){
+		free( pcb->seg_table );
+		pcb->seg_table = NULL;
+		return;
+	}
+
+	// Allocate each segment:
+	// 	For each segment
+
+	// loop through each SEGMENT definition
+	for( int i=0; i<num_segments; i++ ){
+		
+		// 		Try to allocate a new segment and save returned base pointer position--call Alloc_seg()
+
+		base_ptr = Alloc_seg( pcb->seg_table[i].size );
+
+		// 		If no space was available (invalid position returned)
+		// 			Compact memory to eliminate external fragmentation and try to get the base pointer again--call Alloc_seg()
+
+		// did Alloc_seg() finish the request as asked?
+		if( base_ptr == -1 ){
+			// return pointer was -1; there was an error.
+
+			// free some more mem!
+			Compact_mem();
+
+			// try one last time (this is supposedly guranteed to work this time;
+			// see documentation for more info)
+			Alloc_seg( pcb->seg_table[i].size );
+
+		}
+			
+	}
+
 }
 
 /**
@@ -302,8 +520,78 @@ Get_Memory( pcb_type* pcb )
 int
 Alloc_seg( int size )
 {
-	// temporary return value
-	return( 0 );
+
+	// DECLARE VARIABLES
+	seg_list* current, last;
+
+	// Search free list for a block large enough to hold the segment
+	// 	If block is large enough to hold segment
+	//		Stop searching
+
+	// iterate through Free_Mem list until we find a block large enough
+	current = Free_Mem;
+	while( current->size < size ){
+
+		// If no block was large enough
+		//	Return invalid position
+
+		// if we are still iterating, we haven't found a block large enough, so
+		// we get the next one...
+		last = current;
+		current = current->next;
+
+		// ...until we reach the end of the list, at which point, return invalid
+		if( current == NULL ){
+			return -1;
+		}
+
+	}
+
+	// Else, if block is an exact fit
+	//	Use free block's base address for segment
+
+	// if we made it this far, we found a block large enough for the given size
+	// is the block the exact same size as requested?
+	if( current->size == size ){
+
+		//	If block is first in list
+		//		Set the head of the free list to the next node
+		//	Else, segment is in middle or at end of list
+		//		By-pass removed node in list
+
+		if( current == Free_Mem ){
+			Free_Mem = Free_Mem->next;
+		} else {
+			last->next = current->next;
+		}
+
+		//	Delete node
+		free( current );
+		current = NULL;
+
+		//	Decrement total amount of free memory
+		Total_Free = Total_Free - size;
+
+		return current->base;
+
+	}
+
+	// if we made it this far, we found a block large enough for the given size
+	// and it's larger than the size needed.
+
+	//Else, if block is larger than needed
+	//	Use free block's base address for segment
+
+	//	Adjust node's size and starting position:
+	//		Increment base address and decrement block size by given size
+	current->base = current->base + size;
+	current->size = current->size - size;
+
+	//	Decrement total amount of free memory
+	Total_Free = Total_Free - size;
+
+	return current->base;
+
 }
 
 /**
@@ -337,6 +625,24 @@ Alloc_seg( int size )
 void
 Loader( pcb_type* pcb )
 {
+	//For each segment in the user's segment table
+
+	for( int i=0; i < (pcb->num_segments); i++ ){
+
+		//	For each instruction in the segment
+		for( int j=0; j < (pcb->seg_table[j].size); j++ ){
+
+			//		Read instruction from program file into memory--call Get_Instr()
+			Get_Instr(
+			 pcb->script[ pcb->current_prog ],
+			 &Mem[ pcb->seg_table[j].base + j ]
+			);
+
+		}
+			//	Display each segment of program
+			Display_pgm( pcb->seg_table, i, pcb );
+	}
+
 }
 
 /**
@@ -355,6 +661,15 @@ Loader( pcb_type* pcb )
 void
 Dealloc_pgm( pcb_type* pcb )
 {
+
+	// loop though each segment
+	for( int i=0; i < (pcb->num_segments); i++ ){
+		Dealloc_seg( pcb->seg_table->base, pcb->seg_table->size );
+	}
+
+	free( pcb->seg_table );
+	pcb->seg_table = NULL;
+
 }
 
 /**
@@ -393,6 +708,73 @@ Dealloc_pgm( pcb_type* pcb )
 void
 Dealloc_seg( int base, int size )
 {
+
+	// DECLARE VARIABLES
+	struct seg_list* new_segment;
+	struct seg_list* current, last;
+
+	current = Free_Mem;
+	last = current;
+
+	// Allocate and initialize a new free segment
+
+	// allocate
+	new_segment = (struct seg_list*) malloc( sizeof(seg_list) );
+
+	// initalize
+	new_segment->base = base;
+	new_segment->size = size;
+	new_segment->next = NULL;
+
+	// Increment total amount of free memory
+	Total_Free = Total_Free + size;
+	
+	//If free list is empty
+	if( Free_Mem == NULL ){
+		//	Set new segment as the start of the free list
+
+		Free_Mem = new_segment;
+	
+	//Else, if new segment goes at start of list
+	} else if( new_segment->base < Free_Mem->base ){
+		//	Set new segment as the start of the free list
+
+		new_segment->next = Free_Mem;
+		Free_Mem = new_segment;
+
+	//Otherwise, new segment goes in the middle or at the end of the list:
+	} else {
+		//	Search free list to find segments to the left and right of the segment being freed
+		while( current != NULL ){
+
+			//		If previous segment's base < new segment's base < next segment's base
+
+			// is our new block between the last iteration & the current iteration?
+			if(
+			 (new_segment->base) > (last->base)
+			 && (new_segment->base) < (current->base)
+			){
+				//			Insert new segment between two segments in list
+				last->next = new_segment;
+				new_segment->next = current;
+				break;
+			}
+
+			// skip to next block
+			last = current;
+			current = current->next;
+
+		}
+
+		//	If search failed, then the new segment belongs at end of the list
+		//		Add new segment to end of the list
+
+		last->next = new_segment;
+
+		// Merge adjacent segments into a single, larger segment--call Merge_seg()
+
+		Merge_seq( last, new_segment, new_segment->next );
+
 }
 
 /**
@@ -440,6 +822,42 @@ Dealloc_seg( int base, int size )
 void
 Merge_seg( seg_list* prev_seg, seg_list* new_seg, seg_list* next_seg )
 {
+
+	// If the previous free segment is not invalid
+	//	 And
+	// The new free segment follows directly after the previous segment
+
+	if( prev_seg != NULL && (prev_seg->base)+(prev_seg->size) == new_seg->base ){
+
+		// Add the new segment's size to the previous segment
+		// Set previous segment's next link to new segment's next link
+		// Free node representing new segment
+		// Set new segment pointer to previous segment
+
+		prev_seg->size = prev_seg->size + new_seg->size;
+		prev_seg->next = new_segment->next;
+		free( new_segment );
+		new_segment = prev_seg;
+
+	}
+		
+	// If the next free segment is not invalid
+	//	And
+	// The new free segment directly precedes the next segment
+
+	if( next_seg != NULL && (new_seg->base)+(new_seg->size) == next_seg->base ){
+
+		// Add the next segment's size to the new segment
+		// Set new segment's next link to next segment's next link
+		// Free node representing next segment
+
+		new_seg->size - new_seg->size + next_seg->size;
+		new_seg->next = next_seg->next;
+		free( next_seg );
+		next_seg = NULL;
+
+	}
+
 }
 
 /**
@@ -477,6 +895,51 @@ Merge_seg( seg_list* prev_seg, seg_list* new_seg, seg_list* next_seg )
 void
 End_Service( )
 {
+
+	// DECLARE VARIABLES
+	struct pcb_type* pcb;
+	struct time_type* active_time;
+
+	// Retrieve PCB associated with program from terminal table
+	pcb = Term_Table[ Agent ];
+
+	// Mark pcb as done
+	pcb->status = DONE_PCB;
+
+	// Remove PCB from CPU's active process
+	CPU.active_pcb = NULL;
+
+	// Calculate active time for process and busy time for CPU
+   // Record time process became blocked
+
+	active_time = pcb->run_time;
+	Diff_time( &Clock, &active_time );
+	Add_time( &active_time, &CPU.total_busy_time );
+
+	// TODO: remove (?)
+	pcb->block_time = Clock;
+	pcb->status = BLOCKED_PCB;
+
+	// If objective 4 or higher
+	//  Deallocate all I/O request blocks associated with PCB--call Purge_rb()
+	if( Objective >= 4 ){
+		// TODO: more work for obj#4
+		;
+	}
+
+	// If the PCB has no outstanding I/O request blocks
+	//	Load the next program for the user--call Next_pgm()
+	if( pcb->rb_q == NULL ){
+		Next_pgm( pcb );
+	}
+
+	// If objective 4 or higher
+	//	Turn both the scheduling and CPU switches on in order to retrieve the next process to run
+	if( Objective >= 4 ){
+		// TODO: more work for obj#4
+		;
+	}
+
 }
 
 /**
@@ -500,6 +963,10 @@ End_Service( )
 void
 Abend_Service( )
 {
+
+	print_out( "ERROR: Process terminated due to an abnormal condition\n" );
+	End_Service();
+
 }
 
 /**
@@ -542,4 +1009,38 @@ Dump_pcb( )
 	}
 	else // do not print any message
 	{ ; }
+}
+
+void
+skipBlankLines( int prog_id )
+{
+
+	// DECLARE VARIABLES
+	char line[BUFSIZ]; // buffer for each line in our input file
+	fpos_t seek_pos;   // stores current position of the stream
+	int sentinel = 1;
+
+	// loop until we detect a non-blank line
+	while( sentinel ){
+
+		// store the current position of the stream
+		fgetpos( Prog_Files[prog_id], &seek_pos );
+
+		// get the next line from the stream
+		fgets( line, sizeof(line), Prog_Files[prog_id] );
+
+		// is this line blank?
+		if( strncmp( line, "\n", 2 ) == 0  || strncmp( line, "", 1 ) == 0 ){
+			// this line is blank; do nothing so we'll keep gobbling up blank lines
+			;
+		} else {
+			// this line is *not* blank; backup to the previous line and return
+			fsetpos( Prog_Files[prog_id], &seek_pos );
+			sentinel = 0;
+		}
+
+	}
+
+	return;
+
 }

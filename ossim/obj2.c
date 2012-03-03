@@ -113,6 +113,11 @@ void
 Boot( )
 {
 
+	// is this objective 2?
+	if( Objective != 2 ){
+		return;
+	}
+
 	// DECLARE VARIABLES
 	char line[BUFSIZ]; // buffer for each line in our input file
 	int num_segments;
