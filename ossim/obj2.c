@@ -283,7 +283,7 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 	fscanf( Prog_Files[prog_id], "%s %s", &opcode_str, &operand_str );
 
 	// convert to upper case
-	strncpy( opcode_str,  strupr( opcode_str ),  sizeof(opcode_str) );
+	strncpy( opcode_str,  strupr( opcode_str ),  BUFSIZ-1 );
 
 	/**************************
 	* DETERMINE THE OPCODE ID *
@@ -294,7 +294,7 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 	for( int i=0; i<NUM_OPCODES; i++ ){
 
 		// does the opcode match this iteration's opcode name?
-		if( strncmp( opcode_str, Op_Names[i], sizeof(Op_Names[i]) ) == 0 ){
+		if( strncmp( opcode_str, Op_Names[i], sizeof(Op_Names[i])-1 ) == 0 ){
 			// this opcode is matches this iteration's opcode name
 			instruction->opcode = i;
 		}
@@ -344,7 +344,7 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 			// does the opcode match this device?
 			if(
 			 strncmp(
-			  opcode_str, Dev_Table[i].name, DEV_NAME_LENGTH
+			  opcode_str, Dev_Table[i].name, DEV_NAME_LENGTH-1
 			 ) == 0
 			){
 				// this device is our opcode
@@ -501,6 +501,7 @@ Cpu( )
 				Add_time( &Clock, &sim_time );
 				Add_Event( SIO_EVT, agent_id, &sim_time );
 				CPU.state.pc.offset = CPU.state.pc.offset + 2; // skip next instr
+				CPU.CPU_burst = CPU.CPU_burst + 1;
 				return;
 
 			case WIO_OP:
@@ -508,6 +509,7 @@ Cpu( )
 				Add_time( &Clock, &sim_time );
 				Add_Event( WIO_EVT, agent_id, &sim_time );
 				CPU.state.pc.offset = CPU.state.pc.offset + 2; // skip next instr
+				CPU.CPU_burst = CPU.CPU_burst + 1;
 				return;
 
 			case END_OP:
@@ -515,6 +517,7 @@ Cpu( )
 				Add_time( &Clock, &sim_time );
 				Add_Event( END_EVT, agent_id, &sim_time );
 				CPU.state.pc.offset = CPU.state.pc.offset + 2; // skip next instr
+				CPU.CPU_burst = CPU.CPU_burst + 1;
 				return;
 
 			case SKIP_OP:
@@ -851,9 +854,7 @@ Write( struct instr_type* instruction )
 		Else, if user process
 			Print name of user's program
 	Print additional header information
-
-	Display current segment of memory:
-		Get base memory position of the first instruction in the segment
+ Display current segment of memory: Get base memory position of the first instruction in the segment
 
 		For each instruction in the segment
 			If opcode is an instruction, look for the appropriate one in Op_Names
@@ -884,6 +885,9 @@ void
 Display_pgm( segment_type* seg_table, int seg_num, pcb_type* pcb )
 {
 
+	// TODO remove debug print
+	printf("CALLED DISPLAY_PGM()\n");
+
 	// DELCARE VARIABLES
 	int counter;
 
@@ -896,7 +900,7 @@ Display_pgm( segment_type* seg_table, int seg_num, pcb_type* pcb )
 	// loop through each segment in memory
 	counter = 0;
 	// TODO: for obj3: change hard-coded BOOT below to user's program name if not null
-	print_out( "   SEGMENT #%d OF PROGRAM BOOT OF PROCESS BOOT\n", seg_num );
+	print_out( "   SEGMENT #%d OF PROGRAM %s OF PROCESS %s\n", seg_num, Prog_Names[pcb->script[pcb->current_prog]] );
 	print_out( "   ACCBITS: %d  LENGTH: %u\n",
 	 seg_table[seg_num].access, seg_table[seg_num].size
 	);

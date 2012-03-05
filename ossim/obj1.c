@@ -163,7 +163,7 @@ Add_Event( int event, int agent, struct time_type* time )
 		while(
 		 cur_node != NULL // stop looping when we reach the end of the list
 		 // stop looping if the new node does not occur after the next node 
-		 && Compare_time( &new_node->time, &cur_node->time ) > 0
+		 && Compare_time( &new_node->time, &cur_node->time ) >= 0
 		){
 
 			prev_node = cur_node;
