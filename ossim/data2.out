@@ -1,0 +1,98 @@
+
+ +-----------------------------------------------------+
+ |  COP 4600                          Simulator Report |
+ |  DATE:  Sat Feb 11 00:00:17 2012                    |
+ |  NAME:  data2                                       |
+ |                                                     |
+ |  OBJECTIVE # ...........................2           |
+ |  LOGON TIME UNITS ......................MSEC        |
+ |  NO. OF TERMINALS ......................1           |
+ |  MEMORY SIZE ...........................200         |
+ |  CPU RATE ( NSEC/INSTR ) ...............2000        |
+ |  SCHEDULING ALGORITHM ..................FCFS        |
+ |  MAX SCRIPT LENGTH .....................5           |
+ |                                                     |
+ |  DEBUG MEMORY ..........................OFF         |
+ |  DEBUG EVENT ...........................OFF         |
+ |  DEBUG PCB .............................OFF         |
+ |  DEBUG RBLIST ..........................OFF         |
+ |  DEBUG DEVQ ............................OFF         |
+ |  DEBUG CPUQ ............................OFF         |
+ |                                                     |
+ | =================  DEVICE TABLE =================== |
+ |                                                     |
+ |  ID      RATE (*)                                   |
+ |                                                     |
+ |  PRNT    400                                        |
+ |  DISK    3000                                       |
+ |                                                     |
+ | (*) Bytes/Second                                    |
+ +-----------------------------------------------------+
+
+ EVENT  AGENT  HR:xxxxxxxx MN:xx SC:xx MS:xxx mS:xxx NS:xxx
+ -----  -----  ----------- ----- ----- ------ ------ ------
+   SEGMENT #0 OF PROGRAM BOOT OF PROCESS BOOT
+   ACCBITS: 1  LENGTH: 4
+   MEM ADDR  OPCODE  OPERAND
+   --------  ------  -------
+          0  SIO     75      
+          1  DISK    2000    
+          2  SKIP    0       
+          3  JUMP    [2,0]
+
+   SEGMENT #1 OF PROGRAM BOOT OF PROCESS BOOT
+   ACCBITS: 3  LENGTH: 8
+   MEM ADDR  OPCODE  OPERAND
+   --------  ------  -------
+          4  SKIP    1       
+          5  JUMP    [3,0]
+          6  SKIP    0       
+          7  JUMP    [2,6]
+
+   SEGMENT #2 OF PROGRAM BOOT OF PROCESS BOOT
+   ACCBITS: 0  LENGTH: 0
+   MEM ADDR  OPCODE  OPERAND
+   --------  ------  -------
+          8  SIO     400     
+          9  PRNT    150     
+         10  WIO     500     
+         11  REQ     [0,1]
+         12  WIO     0       
+         13  REQ     [2,1]
+         14  SKIP    0       
+         15  JUMP    [1,0]
+
+   SEGMENT #3 OF PROGRAM BOOT OF PROCESS BOOT
+   ACCBITS: 0  LENGTH: 0
+   MEM ADDR  OPCODE  OPERAND
+   --------  ------  -------
+         16  END     20      
+
+ LOGON  U001   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
+
+
+
+
+                              TERMINAL  SUMMARY                             
+ ============================================================================
+ TERMNL|      EXEC      |      WAIT    |    BLOCKED   |    ELAPSED   |  %EFF
+ ======|================|==============|==============|==============|=======
+ ============================================================================
+ TOTALS|           0 SC |         0 SC |         0 SC |         0 SC |
+       |           0 NS |         0 NS |         0 NS |         0 NS |
+ ------|----------------|--------------|--------------|--------------|
+ AVERGE|           0 SC |         0 SC |         0 SC |         0 SC |
+       |           0 NS |         0 NS |         0 NS |         0 NS |
+ =====================================================================
+
+
+                                DEVICE  SUMMARY                            
+ ============================================================================
+ DEVICE|        BUSY    |      WAIT    |      IDLE    |   RESPONSE   | %UTIL
+ ======|================|==============|==============|==============|=======
+ CPU   |           0 SC |         0 SC |         0 SC |         0 SC | 0.00
+       |           0 NS |         0 NS |         0 NS |         0 NS |
+ ============================================================================
+
+End of Benchmark Report.
+

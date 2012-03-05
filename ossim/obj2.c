@@ -900,7 +900,7 @@ Display_pgm( segment_type* seg_table, int seg_num, pcb_type* pcb )
 	// loop through each segment in memory
 	counter = 0;
 	// TODO: for obj3: change hard-coded BOOT below to user's program name if not null
-	print_out( "   SEGMENT #%d OF PROGRAM %s OF PROCESS %s\n", seg_num, Prog_Names[pcb->script[pcb->current_prog]] );
+	print_out( "   SEGMENT #%d OF PROGRAM %s OF PROCESS %s\n", seg_num, Prog_Names[pcb->script[pcb->current_prog]], pcb->username );
 	print_out( "   ACCBITS: %d  LENGTH: %u\n",
 	 seg_table[seg_num].access, seg_table[seg_num].size
 	);

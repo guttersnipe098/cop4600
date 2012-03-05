@@ -200,7 +200,7 @@ Get_Script( pcb_type *pcb )
 		//printf( "\tscript_name:|%s|\n", script_name );
 
 		// Output name of the script to output file
-		print_out( "%s ", script_name );
+		print_out( "%s  ", script_name );
 
 		// Determine script ID for script name read
 
@@ -709,6 +709,8 @@ Loader( pcb_type* pcb )
 			//	Display each segment of program
 			Display_pgm( pcb->seg_table, i, pcb );
 	}
+
+	print_out( "\t\tDOES A LINE MATCH WITH THIS ONE?!?\n" );
 
 }
 
