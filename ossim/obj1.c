@@ -1,6 +1,6 @@
 /*******************************************************************************
 * File:      obj1.c
-* Version:   0.1
+* Version:   0.2
 * Purpose:   Implements loading the event list
 * Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
 *            Sean Szumlanski
@@ -8,7 +8,7 @@
 * Course:    COP 4600 <http://www.cs.ucf.edu/courses/cop4600/spring2012>
 * Objective: 1
 * Created:   2012-01-27
-* Updated:   2012-01-27
+* Updated:   2012-02-05
 * Notes:     This program was written to be compiled against the gnu99 standard.
 *            Please execute the following commands to build correctly:
 *

@@ -1,6 +1,6 @@
 /*******************************************************************************
 * File:      obj3.c
-* Version:   0.6
+* Version:   0.7
 * Purpose:   Read all remaining *.dat files, build PCB, load programs & service
 *            event interruption.
 * Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
@@ -9,7 +9,7 @@
 * Course:    COP 4600 <http://www.cs.ucf.edu/courses/cop4600/spring2012>
 * Objective: 3
 * Created:   2012-02-25
-* Updated:   2012-03-02
+* Updated:   2012-03-05
 * Notes:     This program was written to be compiled against the gnu99 standard.
 *            Please execute the following commands to build correctly:
 *
@@ -159,6 +159,7 @@ Get_Script( pcb_type *pcb )
 	// DECLARE VARIABLES
 	int i;
 	char* line[BUFSIZ];
+	char* script_name[BUFSIZ];
 
 	// Allocate PCB's array of scripts
 
@@ -178,25 +179,25 @@ Get_Script( pcb_type *pcb )
 
 	// loop line-by-line until EOF
 	i = 0;
-	while( fgets( (char*) line, sizeof(line), Script_fp) ){
+	//while( fgets( (char*) line, sizeof(line), Script_fp) ){
+	while( fscanf( Script_fp, "%s", script_name ) ){
 
-		// DECLARE VARIABLES
-		char* script_name[BUFSIZ];
-
-		sscanf( (char*) line, "%s", &script_name );
+		//sscanf( (char*) line, "%s", &script_name );
 
 		// Stop reading script names when "LOGOFF" script name encountered
 
 		// is this script_name a LOGOFF script?
-		if( strcmp( (char*) script_name, "LOGOFF" ) == 0 ){
-			break;
-		}
+		//if( strcmp( (char*) script_name, "LOGOFF" ) == 0 ){
+			//pcb->script[i] = 6;
+			//print_out( "%s ", script_name );
+			//break;
+		//}
 
 		// Capitalize script name so that case does not matter
 		script_name[-1] = strupr( (char*) script_name );
 
 		// TODO: remove debug
-		printf( "\tscript_name:|%s|\n", script_name );
+		//printf( "\tscript_name:|%s|\n", script_name );
 
 		// Output name of the script to output file
 		print_out( "%s ", script_name );
@@ -217,6 +218,10 @@ Get_Script( pcb_type *pcb )
 				break;
 			}
 
+		}
+
+		if( strcmp( (char*) script_name, "LOGOFF" ) == 0 ){
+			break;
 		}
 
 		// increment counter
@@ -724,14 +729,14 @@ void
 Dealloc_pgm( pcb_type* pcb )
 {
 
+	// TODO: remove debug print
+	printf( "\n\t***|%d|***\n", pcb->seg_table->base );
+	printf( "\n\t***|%u|***\n", pcb->seg_table->size );
+
 	// loop though each segment
 	for( int i=0; i < (pcb->num_segments); i++ ){
 		Dealloc_seg( pcb->seg_table->base, pcb->seg_table->size );
 	}
-
-	// TODO: remove debug print
-	printf( "\n\t***|%d|***\n", pcb->seg_table->base );
-	printf( "\n\t***|%u|***\n", pcb->seg_table->size );
 
 	free( pcb->seg_table );
 	pcb->seg_table = NULL;
