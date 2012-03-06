@@ -710,7 +710,11 @@ Loader( pcb_type* pcb )
 			Display_pgm( pcb->seg_table, i, pcb );
 	}
 
-	print_out( "\t\tDOES A LINE MATCH WITH THIS ONE?!?\n" );
+	print_out( "\t\tProgram number %d, %s, has been loaded for user %s\n",
+	 pcb->current_prog,
+	 Prog_Names[pcb->script[pcb->current_prog]],
+	 pcb->username
+	);
 
 }
 

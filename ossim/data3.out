@@ -1,7 +1,7 @@
 
  +-----------------------------------------------------+
  |  COP 4600                          Simulator Report |
- |  DATE:  Mon Mar  5 12:29:05 2012                    |
+ |  DATE:  Mon Mar  5 19:57:15 2012                    |
  |  NAME:  data3                                       |
  |                                                     |
  |  OBJECTIVE # ...........................3           |
@@ -74,6 +74,7 @@
           5  PRT1    70      
 
 		DOES A LINE MATCH WITH THIS ONE?!?
+		Program number 1, COMPILER, has been loaded for user U001
  LOGON  U002   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
 
 	Script for user U002 is:
@@ -90,6 +91,7 @@
           4  END     30      
 
 		DOES A LINE MATCH WITH THIS ONE?!?
+		Program number 1, PRINTER, has been loaded for user U002
  LOGON  U004   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
 
 	Script for user U004 is:
@@ -106,6 +108,7 @@
           4  END     60      
 
 		DOES A LINE MATCH WITH THIS ONE?!?
+		Program number 1, USER, has been loaded for user U004
  LOGON  U005   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:500
 
 	Script for user U005 is:
