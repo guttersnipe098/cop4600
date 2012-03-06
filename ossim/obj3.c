@@ -429,12 +429,18 @@ Get_Memory( pcb_type* pcb )
 
 	// Read the fields "PROGRAM" and number of segments from program file
 
+	skipBlankLines( pcb->script[pcb->current_prog] );
+
 	// get the number of segments defined for this program
 	fscanf(
 	 Prog_Files[ pcb->script[pcb->current_prog] ],
 	 "PROGRAM %d\n",
 	 &num_segments
 	);
+
+	// TODO: remove debug prints
+	//printf( "***line:|%s|\n", Prog_Files[ pcb->script[pcb->current_prog] ] );
+	printf( "***num_segments:|%d|\n", num_segments );
 
 	// Allocate pcb's segment table
 	pcb->seg_table = (struct segment_type*) calloc(
@@ -576,6 +582,7 @@ Alloc_seg( int size )
 	// DECLARE VARIABLES
 	struct seg_list* current;
 	struct seg_list* last;
+	int base;
 
 	// Search free list for a block large enough to hold the segment
 	// 	If block is large enough to hold segment
@@ -591,6 +598,7 @@ Alloc_seg( int size )
 
 		// if we are still iterating, we haven't found a block large enough, so
 		// we get the next one...
+		last = current;
 		current = current->next;
 
 		// ...until we reach the end of the list, at which point, return invalid
@@ -619,13 +627,14 @@ Alloc_seg( int size )
 		}
 
 		//	Delete node
+		base = current->base;
 		free( current );
 		current = NULL;
 
 		//	Decrement total amount of free memory
 		Total_Free = Total_Free - size;
 
-		return current->base;
+		return base;
 
 	}
 
