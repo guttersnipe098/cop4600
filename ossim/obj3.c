@@ -977,7 +977,7 @@ End_Service( )
 
 	// Retrieve PCB associated with program from terminal table
 	// TODO: change back from "Agent - 1" to "Agent" (?)
-	pcb = Term_Table[ Agent-1 ];
+	pcb = Term_Table[ Agent ];
 
 	// Mark pcb as done
 	pcb->status = DONE_PCB;
