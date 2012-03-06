@@ -166,12 +166,11 @@ Get_Script( pcb_type *pcb )
 	// TODO: matching free()
 	pcb->script = (struct prog_type*) calloc(
 	 Max_Num_Scripts,
-	 //sizeof( struct prog_type )
-	 sizeof( int )
+	 sizeof( prog_type )
 	);
 
 	// Mark index of first script
-	pcb->current_prog = 1;
+	pcb->current_prog = 0;
 
 	print_out( "\tScript for user %s is:\n\t", pcb->username );
 
@@ -183,15 +182,6 @@ Get_Script( pcb_type *pcb )
 	while( fscanf( Script_fp, "%s", script_name ) ){
 
 		//sscanf( (char*) line, "%s", &script_name );
-
-		// Stop reading script names when "LOGOFF" script name encountered
-
-		// is this script_name a LOGOFF script?
-		//if( strcmp( (char*) script_name, "LOGOFF" ) == 0 ){
-			//pcb->script[i] = 6;
-			//print_out( "%s ", script_name );
-			//break;
-		//}
 
 		// Capitalize script name so that case does not matter
 		script_name[-1] = strupr( (char*) script_name );
@@ -210,7 +200,7 @@ Get_Script( pcb_type *pcb )
 			// does this iteration's program name match the this pcb's script_name?
 			if( strcmp( (char*) script_name, Prog_Names[j] ) == 0 ){
 
-				pcb->script[i] = (int) j;
+				pcb->script[i] = (prog_type) j;
 
 				// TODO: remove debug
 				//printf( "\t\tmatch! pcb->script[%d]:|%s|\n", j, pcb->script[j] );
@@ -220,6 +210,7 @@ Get_Script( pcb_type *pcb )
 
 		}
 
+		// Stop reading script names when "LOGOFF" script name encountered
 		if( strcmp( (char*) script_name, "LOGOFF" ) == 0 ){
 			break;
 		}
@@ -292,7 +283,7 @@ Next_pgm( pcb_type* pcb )
 	// 	Deallocate memory used for the previous program--call Dealloc_pgm()
 
 	// TODO: change this back to "pcb->current_prog != 1" (?)
-	if( pcb->current_prog != 1 && pcb->rb_q == NULL ){
+	if( pcb->current_prog != 0 && pcb->rb_q == NULL ){
 
 		// TODO: remove debug print
 		printf( "omw to Dealloc dt first Next_Pgm() exec\n" );
@@ -473,6 +464,10 @@ if( pcb->seg_table == NULL ){
 		 &pcb->seg_table[i].size,
 		 &pcb->seg_table[i].access
 		);
+
+		// TODO: remove debug hard code
+		//pcb->seg_table[i].access = 'X';
+		printf( "*** segment[%d].access:|%x|\n", i, pcb->seg_table[i].access );
 
 		//		Increment amount of memory used
 
@@ -710,8 +705,8 @@ Loader( pcb_type* pcb )
 			Display_pgm( pcb->seg_table, i, pcb );
 	}
 
-	print_out( "\t\tProgram number %d, %s, has been loaded for user %s\n",
-	 pcb->current_prog,
+	print_out( "\t\tProgram number %d, %s, has been loaded for user %s\n\n",
+	 pcb->current_prog + 1,
 	 Prog_Names[pcb->script[pcb->current_prog]],
 	 pcb->username
 	);

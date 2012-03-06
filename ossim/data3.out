@@ -1,7 +1,7 @@
 
  +-----------------------------------------------------+
  |  COP 4600                          Simulator Report |
- |  DATE:  Mon Mar  5 19:57:15 2012                    |
+ |  DATE:  Mon Mar  5 21:58:53 2012                    |
  |  NAME:  data3                                       |
  |                                                     |
  |  OBJECTIVE # ...........................3           |
@@ -40,77 +40,28 @@
 	Script for user U001 is:
 	EDITOR  COMPILER  EDITOR  COMPILER  LINKER  USER  LOGOFF  
 
-   SEGMENT #0 OF PROGRAM COMPILER OF PROCESS U001
-   ACCBITS: 255  LENGTH: 6
+   SEGMENT #0 OF PROGRAM EDITOR OF PROCESS U001
+   ACCBITS: 11  LENGTH: 4
    MEM ADDR  OPCODE  OPERAND
    --------  ------  -------
-          0  SIO     30      
-          1  DISK    300     
-          2  SIO     80      
-          3  RDSK    300     
-          4  SKIP    0       
-          5  JUMP    [1,0]
+          0  SIO     75      
+          1  DISK    150     
+          2  SKIP    0       
+          3  JUMP    [1,0]
 
-   SEGMENT #1 OF PROGRAM COMPILER OF PROCESS U001
-   ACCBITS: 255  LENGTH: 8
+   SEGMENT #1 OF PROGRAM EDITOR OF PROCESS U001
+   ACCBITS: 160  LENGTH: 7
    MEM ADDR  OPCODE  OPERAND
    --------  ------  -------
-          0  SIO     1000    
-          1  RDSK    150     
-          2  WIO     100     
+          0  SIO     40      
+          1  DSK2    10      
+          2  WIO     50      
           3  REQ     [0,1]
-          4  WIO     0       
-          5  REQ     [0,3]
 
-   SEGMENT #2 OF PROGRAM COMPILER OF PROCESS U001
-   ACCBITS: 255  LENGTH: 11
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  WIO     1000    
-          1  REQ     [1,1]
-          2  SIO     400     
-          3  DSK2    35      
-          4  SIO     75      
-          5  PRT1    70      
+		Program number 1, EDITOR, has been loaded for user U001
 
-		DOES A LINE MATCH WITH THIS ONE?!?
-		Program number 1, COMPILER, has been loaded for user U001
  LOGON  U002   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
 
 	Script for user U002 is:
 	EDITOR  PRINTER  LOGOFF  
-
-   SEGMENT #0 OF PROGRAM PRINTER OF PROCESS U002
-   ACCBITS: 255  LENGTH: 5
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     40      
-          1  LPRT    35      
-          2  WIO     0       
-          3  REQ     [0,1]
-          4  END     30      
-
-		DOES A LINE MATCH WITH THIS ONE?!?
-		Program number 1, PRINTER, has been loaded for user U002
- LOGON  U004   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
-
-	Script for user U004 is:
-	USER  USER  PRINTER  LOGOFF  
-
-   SEGMENT #0 OF PROGRAM USER OF PROCESS U004
-   ACCBITS: 16  LENGTH: 5
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     1400    
-          1  LPRT    40      
-          2  WIO     100     
-          3  REQ     [0,1]
-          4  END     60      
-
-		DOES A LINE MATCH WITH THIS ONE?!?
-		Program number 1, USER, has been loaded for user U004
- LOGON  U005   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:500
-
-	Script for user U005 is:
-	EDITOR  PRINTER  EDITOR  LOGOFF  
 
