@@ -1,6 +1,6 @@
 /*******************************************************************************
 * File:      obj3.c
-* Version:   0.7
+* Version:   0.8
 * Purpose:   Read all remaining *.dat files, build PCB, load programs & service
 *            event interruption.
 * Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
@@ -9,7 +9,7 @@
 * Course:    COP 4600 <http://www.cs.ucf.edu/courses/cop4600/spring2012>
 * Objective: 3
 * Created:   2012-02-25
-* Updated:   2012-03-05
+* Updated:   2012-03-06
 * Notes:     This program was written to be compiled against the gnu99 standard.
 *            Please execute the following commands to build correctly:
 *
@@ -192,6 +192,11 @@ Get_Script( pcb_type *pcb )
 		// Output name of the script to output file
 		print_out( "%s  ", script_name );
 
+		// Stop reading script names when "LOGOFF" script name encountered
+		if( strcmp( (char*) script_name, "LOGOFF" ) == 0 ){
+			break;
+		}
+
 		// Determine script ID for script name read
 
 		// loop though each possible program name
@@ -209,12 +214,6 @@ Get_Script( pcb_type *pcb )
 			}
 
 		}
-
-		// Stop reading script names when "LOGOFF" script name encountered
-		if( strcmp( (char*) script_name, "LOGOFF" ) == 0 ){
-			break;
-		}
-
 		// increment counter
 		i = i+1;
 
@@ -283,10 +282,10 @@ Next_pgm( pcb_type* pcb )
 	// 	Deallocate memory used for the previous program--call Dealloc_pgm()
 
 	// TODO: change this back to "pcb->current_prog != 1" (?)
-	if( pcb->current_prog != 0 && pcb->rb_q == NULL ){
+	if( pcb->current_prog != 0 && pcb->rb_q == NULL && pcb->current_prog != NUM_PROGRAMS+1 ){
 
 		// TODO: remove debug print
-		printf( "omw to Dealloc dt first Next_Pgm() exec\n" );
+		//printf( "omw to Dealloc dt first Next_Pgm() exec\n" );
 
 		Dealloc_pgm( pcb );
 	}
@@ -305,7 +304,7 @@ Next_pgm( pcb_type* pcb )
 	//  Calculate total time logged on
 
 	// are we currently executing the last program?
-	if( pcb->current_prog == NUM_PROGRAMS ){
+	if( pcb->current_prog >= NUM_PROGRAMS ){
 
 		// set the pcb's status to TERMINATED
 		pcb->status = TERMINATED_PCB;
@@ -429,7 +428,12 @@ Get_Memory( pcb_type* pcb )
 
 	// Read the fields "PROGRAM" and number of segments from program file
 
-	skipBlankLines( pcb->script[pcb->current_prog] );
+	printf( "about to call skipBlankLines(%d)\n", pcb->script[pcb->current_prog] );
+	if( skipBlankLines( pcb->script[pcb->current_prog] ) ){
+		printf( "\t***detected EOF; returning NOW!\n" );
+		pcb->current_prog = NUM_PROGRAMS+1;
+		return;
+	}
 
 	// get the number of segments defined for this program
 	fscanf(
@@ -440,7 +444,8 @@ Get_Memory( pcb_type* pcb )
 
 	// TODO: remove debug prints
 	//printf( "***line:|%s|\n", Prog_Files[ pcb->script[pcb->current_prog] ] );
-	printf( "***num_segments:|%d|\n", num_segments );
+	//printf( "***num_segments:|%d|\n", num_segments );
+	printf( "\t***PROGRAM %d\n", num_segments );
 
 	// Allocate pcb's segment table
 	pcb->seg_table = (struct segment_type*) calloc(
@@ -471,29 +476,36 @@ if( pcb->seg_table == NULL ){
 		 &pcb->seg_table[i].access
 		);
 
+		if( i==0 ){
+			pcb->seg_table[i].base = 0;
+		} else {
+			pcb->seg_table[i].base = pcb->seg_table[i-1].base + pcb->seg_table[i-1].size;
+		}
+
 		// TODO: remove debug hard code
 		//pcb->seg_table[i].access = 'X';
-		printf( "*** segment[%d].access:|%x|\n", i, pcb->seg_table[i].access );
+		//printf( "*** segment[%d].access:|%x|\n", i, pcb->seg_table[i].access );
+		printf( "\t***SEGMENT %d %02X\n", pcb->seg_table[i].size, pcb->seg_table[i].access );
 
 		//		Increment amount of memory used
 
 		Total_Free = Total_Free - pcb->seg_table[i].size;
 
+		// If program cannot fit into memory (total amount of free space < needed size)
+		// 	Clear user's segment table, which marks allocation failure
+		// 	Return without allocating a segment
+
+		if( Total_Free < pcb->seg_table[i].size ){
+
+			// TODO: remove debug print
+			printf( "\tinsufficient Total_Free\n" );
+
+			free( pcb->seg_table );
+			pcb->seg_table = NULL;
+			return;
+		}
+
 		//		Go to next segment in user's segment table
-	}
-
-	// If program cannot fit into memory (total amount of free space < needed size)
-	// 	Clear user's segment table, which marks allocation failure
-	// 	Return without allocating a segment
-
-	if( Total_Free < 0 ){
-
-		// TODO: remove debug print
-		printf( "\tinsufficient Total_Free\n" );
-
-		free( pcb->seg_table );
-		pcb->seg_table = NULL;
-		return;
 	}
 
 	// Allocate each segment:
@@ -518,9 +530,11 @@ if( pcb->seg_table == NULL ){
 
 			// try one last time (this is supposedly guranteed to work this time;
 			// see documentation for more info)
-			Alloc_seg( pcb->seg_table[i].size );
+			base_ptr = Alloc_seg( pcb->seg_table[i].size );
 
 		}
+
+		//pcb->seg_table[i].base = base_ptr;
 			
 	}
 
@@ -740,12 +754,12 @@ Dealloc_pgm( pcb_type* pcb )
 {
 
 	// TODO: remove debug print
-	printf( "\n\t***|%d|***\n", pcb->seg_table->base );
-	printf( "\n\t***|%u|***\n", pcb->seg_table->size );
+	//printf( "\n\t***|%d|***\n", pcb->seg_table->base );
+	//printf( "\n\t***|%u|***\n", pcb->seg_table->size );
 
 	// loop though each segment
 	for( int i=0; i < (pcb->num_segments); i++ ){
-		Dealloc_seg( pcb->seg_table->base, pcb->seg_table->size );
+		Dealloc_seg( pcb->seg_table[i].base, pcb->seg_table[i].size );
 	}
 
 	free( pcb->seg_table );
