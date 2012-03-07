@@ -901,17 +901,17 @@ Display_pgm( segment_type* seg_table, int seg_num, pcb_type* pcb )
 	counter = 0;
 	// TODO: for obj3: change hard-coded BOOT below to user's program name if not null
 	print_out( "   SEGMENT #%d OF PROGRAM %s OF PROCESS %s\n", seg_num, Prog_Names[pcb->script[pcb->current_prog]], pcb->username );
-	print_out( "   ACCBITS: %d  LENGTH: %u\n",
+	print_out( "   ACCBITS: %02X  LENGTH: %u\n",
 	 seg_table[seg_num].access, seg_table[seg_num].size
 	);
 	print_out( "   MEM ADDR  OPCODE  OPERAND\n" );
 	print_out( "   --------  ------  -------\n" );
 
 	// loop through each instruction in this segment
-	for( int i=0; i<(seg_table->size); i++ ){
+	for( int i=0; i<(seg_table[seg_num].size); i++ ){
 
 		// DECLARE VARIABLES
-		int element = seg_table->base + i;
+		int element = seg_table[seg_num].base + i;
 		int opcode;
 
 		// TODO: remove debug
@@ -1024,13 +1024,19 @@ skipBlankLines( int prog_id )
 		fgetpos( Prog_Files[prog_id], &seek_pos );
 
 		// get the next line from the stream
-		fgets( line, sizeof(line), Prog_Files[prog_id] );
+		fgets( line, BUFSIZ-1, Prog_Files[prog_id] );
 
 		// is this line blank?
 		if( strncmp( line, "\n", 2 ) == 0  || strncmp( line, "", 1 ) == 0 ){
+
+//TODO remove debug lines
+printf( "***skipping line:|%s|\n", line );
+
 			// this line is blank; do nothing so we'll keep gobbling up blank lines
 			;
 		} else {
+//TODO remove debug lines
+printf( "***NOT skipping line:|%s|\n", line );
 			// this line is *not* blank; backup to the previous line and return
 			fsetpos( Prog_Files[prog_id], &seek_pos );
 			sentinel = 0;
