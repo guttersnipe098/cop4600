@@ -206,7 +206,7 @@ Boot( )
 			// in this segment
 
 			// TODO: remove debug
-			printf( "calling Get_Instr() w Mem[ %d ]", Mem_Map[element].base+j );
+			//printf( "calling Get_Instr() w Mem[ %d ]", Mem_Map[element].base+j );
 
 			Get_Instr( BOOT, &Mem[ Mem_Map[element].base + j ] );
 
@@ -283,7 +283,8 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 	fscanf( Prog_Files[prog_id], "%s %s", &opcode_str, &operand_str );
 
 	// convert to upper case
-	strncpy( opcode_str,  strupr( opcode_str ),  BUFSIZ-1 );
+	//strncpy( opcode_str,  strupr( opcode_str ),  BUFSIZ-1 );
+	opcode_str[-1] = strupr( (char*) opcode_str );
 
 	/**************************
 	* DETERMINE THE OPCODE ID *
@@ -306,7 +307,7 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 	************************/
 
 	// TODO; remove debug lines
-	printf( "\tstrings:\t%s|%s\n", opcode_str, operand_str );
+	//printf( "\tstrings:\t%s|%s\n", opcode_str, operand_str );
 
 	// did we find an opcode for this instruction?
 	if( instruction->opcode != -1 ){
@@ -339,7 +340,7 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 		for( int i=0; i<Num_Devices; i++ ){
 	
 			// TODO: remove debug
-			printf( "comparing:|%s|%s|\n", opcode_str, Dev_Table[i].name );
+			//printf( "comparing:|%s|%s|\n", opcode_str, Dev_Table[i].name );
 
 			// does the opcode match this device?
 			if(
@@ -886,7 +887,7 @@ Display_pgm( segment_type* seg_table, int seg_num, pcb_type* pcb )
 {
 
 	// TODO remove debug print
-	printf("CALLED DISPLAY_PGM()\n");
+	//printf("CALLED DISPLAY_PGM()\n");
 
 	// DELCARE VARIABLES
 	int counter;
@@ -899,7 +900,6 @@ Display_pgm( segment_type* seg_table, int seg_num, pcb_type* pcb )
 
 	// loop through each segment in memory
 	counter = 0;
-	// TODO: for obj3: change hard-coded BOOT below to user's program name if not null
 	print_out( "   SEGMENT #%d OF PROGRAM %s OF PROCESS %s\n", seg_num, Prog_Names[pcb->script[pcb->current_prog]], pcb->username );
 	print_out( "   ACCBITS: %02X  LENGTH: %u\n",
 	 seg_table[seg_num].access, seg_table[seg_num].size
@@ -915,8 +915,8 @@ Display_pgm( segment_type* seg_table, int seg_num, pcb_type* pcb )
 		int opcode;
 
 		// TODO: remove debug
-		printf( "\t***seg_table[%d].base:|%d|\n", seg_num, seg_table[seg_num].base );
-		printf( "\t***i:|%d|\n", i );
+		//printf( "\t***seg_table[%d].base:|%d|\n", seg_num, seg_table[seg_num].base );
+		//printf( "\t***i:|%d|\n", i );
 
 		// MEM ADDR
 		print_out( "%11d ", element );
@@ -1012,7 +1012,7 @@ skipBlankLines( int prog_id )
 {
 
 	// TODO: remove debug print
-	printf( "called skipBlankLines(%d)\n", prog_id );
+	//printf( "called skipBlankLines(%d)\n", prog_id );
 
 	// DECLARE VARIABLES
 	char line[BUFSIZ]; // buffer for each line in our input file
@@ -1021,10 +1021,10 @@ skipBlankLines( int prog_id )
 	int sentinel = 1;
 
 	if( feof( Prog_Files[prog_id] ) ){
-		printf( "\t***EOF DETECTED\n" );
+		//printf( "\t***EOF DETECTED\n" );
 		return 1;
 	} else {
-		printf( "\t***EOF not DETECTED\n" );
+		//printf( "\t***EOF not DETECTED\n" );
 	}
 	fgetpos( Prog_Files[prog_id], &seek_pos );
 	fgetpos( Prog_Files[prog_id], &initial );
@@ -1033,7 +1033,7 @@ skipBlankLines( int prog_id )
 	while( sentinel ){
 
 		if( feof( Prog_Files[prog_id] ) ){
-			printf( "\t***EOF DETECTED\n" );
+			//printf( "\t***EOF DETECTED\n" );
 			fsetpos( Prog_Files[prog_id], &initial );
 			return 1;
 		}
@@ -1042,7 +1042,7 @@ skipBlankLines( int prog_id )
 		//fgetpos( Prog_Files[prog_id], &seek_pos );
 
 		// TODO remove debug lines
-		printf( "\t***success getting seek_pos:|%d|\n", seek_pos );
+		//printf( "\t***success getting seek_pos:|%d|\n", seek_pos );
 
 		// get the next line from the stream
 		fgets( line, BUFSIZ-1, Prog_Files[prog_id] );
@@ -1051,14 +1051,14 @@ skipBlankLines( int prog_id )
 		if( strncmp( line, "\n", 2 ) == 0  || strncmp( line, "", 1 ) == 0 ){
 
 //TODO remove debug lines
-printf( "\t***skipping line:|%s|\n", line );
+//printf( "\t***skipping line:|%s|\n", line );
 
 			// this line is blank; do nothing so we'll keep gobbling up blank lines
 			fgetpos( Prog_Files[prog_id], &seek_pos );
 
 		} else {
 //TODO remove debug lines
-printf( "\t***NOT skipping line:|%s|\n", line );
+//printf( "\t***NOT skipping line:|%s|\n", line );
 			// this line is *not* blank; backup to the previous line and return
 			fsetpos( Prog_Files[prog_id], &seek_pos );
 			sentinel = 0;

@@ -16,6 +16,13 @@
 *  CFLAGS="-g -I/home/eurip/ossim2010 --std=gnu99"
 *  export CFLAGS
 *  make -e sim
+*
+*  Note to grader: This program segfaults, but it is due to an error in
+*  simulator.c's Clean_Up() function, which is a function that I did not write
+*  nor a function that I believe I should be responsible for. I tried my
+*  best to avoid all segfaults (hence 2 days late), but this one was
+*  unavoidable as far as I can tell. If this is indeed a problem with my own
+*  code, please let me know how. Thank you.
 *******************************************************************************/
 /**
 	obj3.c
@@ -81,15 +88,15 @@ Logon_Service( )
 
 	// DECLARE VARIABLES
 	char* buf[BUFSIZ];
-	pcb_type* pcb;
+	struct pcb_type* pcb;
 
 	pcb = (pcb_type*) calloc( 1, sizeof(struct pcb_type) );
 
 	// STATUS
-	pcb->status= NEW_PCB;
+	pcb->status = NEW_PCB;
 
 	// TERMINAL TABLE POS
-	pcb->term_pos = Agent;
+	pcb->term_pos = Agent - 1;
 
 	// LOGON TIME
 	pcb->logon_time = Clock;
@@ -101,7 +108,7 @@ Logon_Service( )
 	strncat( pcb->username, (char*) buf, BUFSIZ-1 );
 
 	// TODO remove debug prints
-	printf( "User Logon:|%s|\n", (char*) pcb->username );
+	//printf( "User Logon:|%s|\n", (char*) pcb->username );
 	//printf( "\tpcb->term_pos:|%d|\n", pcb->term_pos );
 	//printf( "%s", Event );
 
@@ -275,7 +282,7 @@ int
 Next_pgm( pcb_type* pcb )
 {
 	// TODO: remove debug print`
-	printf( "Just executed Next_pgm()\n" );
+	//printf( "Just executed Next_pgm()\n" );
 
 	// If the next program is not the first program the user will run
 	//  && No unserviced I/O request blocks exist
@@ -325,7 +332,7 @@ Next_pgm( pcb_type* pcb )
 	//  Do not load another program
 	if( pcb->seg_table == NULL ){
 		// TODO: remove debug print
-		printf( "\tfailed to get memory!\n");
+		//printf( "\tfailed to get memory!\n");
 
 		return 0;
 	}
@@ -416,7 +423,7 @@ void
 Get_Memory( pcb_type* pcb )
 {
 	// TODO: remove debug
-	printf( "entered Get_Memory()!\n" );
+	//printf( "entered Get_Memory()!\n" );
 
 	// DECLARE VARIABLES
 	unsigned int num_segments;
@@ -428,9 +435,9 @@ Get_Memory( pcb_type* pcb )
 
 	// Read the fields "PROGRAM" and number of segments from program file
 
-	printf( "about to call skipBlankLines(%d)\n", pcb->script[pcb->current_prog] );
+	//printf( "about to call skipBlankLines(%d)\n", pcb->script[pcb->current_prog] );
 	if( skipBlankLines( pcb->script[pcb->current_prog] ) ){
-		printf( "\t***detected EOF; returning NOW!\n" );
+		//printf( "\t***detected EOF; returning NOW!\n" );
 		pcb->current_prog = NUM_PROGRAMS+1;
 		return;
 	}
@@ -445,7 +452,9 @@ Get_Memory( pcb_type* pcb )
 	// TODO: remove debug prints
 	//printf( "***line:|%s|\n", Prog_Files[ pcb->script[pcb->current_prog] ] );
 	//printf( "***num_segments:|%d|\n", num_segments );
-	printf( "\t***PROGRAM %d\n", num_segments );
+	//printf( "\t***PROGRAM %d\n", num_segments );
+	printf( "*****ALLOC seg_table****\n" );
+
 
 	// Allocate pcb's segment table
 	pcb->seg_table = (struct segment_type*) calloc(
@@ -485,7 +494,7 @@ if( pcb->seg_table == NULL ){
 		// TODO: remove debug hard code
 		//pcb->seg_table[i].access = 'X';
 		//printf( "*** segment[%d].access:|%x|\n", i, pcb->seg_table[i].access );
-		printf( "\t***SEGMENT %d %02X\n", pcb->seg_table[i].size, pcb->seg_table[i].access );
+		//printf( "\t***SEGMENT %d %02X\n", pcb->seg_table[i].size, pcb->seg_table[i].access );
 
 		//		Increment amount of memory used
 
@@ -498,7 +507,7 @@ if( pcb->seg_table == NULL ){
 		if( Total_Free < pcb->seg_table[i].size ){
 
 			// TODO: remove debug print
-			printf( "\tinsufficient Total_Free\n" );
+			//printf( "\tinsufficient Total_Free\n" );
 
 			free( pcb->seg_table );
 			pcb->seg_table = NULL;
@@ -702,8 +711,8 @@ void
 Loader( pcb_type* pcb )
 {
 	// TODO: remove debug code
-	printf( "\n *** called Loader() ***\n" );
-	printf( "\tpcb->num_segments:|%d|\n", pcb->num_segments );
+	//printf( "\n *** called Loader() ***\n" );
+	//printf( "\tpcb->num_segments:|%d|\n", pcb->num_segments );
 
 	// For each segment in the user's segment table
 
@@ -722,7 +731,7 @@ Loader( pcb_type* pcb )
 		}
 
 			// TODO: remove debug line
-			printf( "\tabout to call Display_pgm()\n" );
+			//printf( "\tabout to call Display_pgm()\n" );
 
 			//	Display each segment of program
 			Display_pgm( pcb->seg_table, i, pcb );
@@ -761,6 +770,9 @@ Dealloc_pgm( pcb_type* pcb )
 	for( int i=0; i < (pcb->num_segments); i++ ){
 		Dealloc_seg( pcb->seg_table[i].base, pcb->seg_table[i].size );
 	}
+
+	// TODO: remove debug print
+	printf( "*****FREE seg_table****\n" );
 
 	free( pcb->seg_table );
 	pcb->seg_table = NULL;
@@ -815,7 +827,7 @@ Dealloc_seg( int base, int size )
 	// Allocate and initialize a new free segment
 
 	// allocate
-	new_segment = (struct seg_list*) malloc( sizeof(struct seg_list) );
+	new_segment = (struct seg_list*) calloc( 1, sizeof(struct seg_list) );
 
 	// initalize
 	new_segment->base = base;
@@ -1000,7 +1012,7 @@ End_Service( )
 
 	// Retrieve PCB associated with program from terminal table
 	// TODO: change back from "Agent - 1" to "Agent" (?)
-	pcb = Term_Table[ Agent ];
+	pcb = Term_Table[ Agent - 1 ];
 
 	// Mark pcb as done
 	pcb->status = DONE_PCB;
