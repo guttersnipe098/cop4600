@@ -197,11 +197,14 @@ Get_Script( pcb_type *pcb )
 		//printf( "\tscript_name:|%s|\n", script_name );
 
 		// Output name of the script to output file
-		print_out( "%s  ", script_name );
+		print_out( "%s", script_name );
+
 
 		// Stop reading script names when "LOGOFF" script name encountered
 		if( strcmp( (char*) script_name, "LOGOFF" ) == 0 ){
 			break;
+		} else {
+			print_out( "  " );
 		}
 
 		// Determine script ID for script name read
@@ -225,6 +228,9 @@ Get_Script( pcb_type *pcb )
 		i = i+1;
 
 	}
+
+	// set the last script to be LOGOFF
+	pcb->script[i] = LOGOFF;
 
 	print_out( "\n\n" );
 
@@ -300,6 +306,11 @@ Next_pgm( pcb_type* pcb )
 	// If process has an unserviced I/O request block
 	//  Do not load a new program
 
+	printf( "script in Next_pgm|%d|\n", pcb->script[pcb->current_prog] );
+	if( pcb->script[pcb->current_prog] == LOGOFF ){
+		printf( "\t*******I'm here!!*****\n" );
+	}
+
 	// is the process's IORB queue empty?
 	if( pcb->rb_q != NULL ){
 		// the queue is not empty; there exist unserviced IORB(s)
@@ -311,7 +322,8 @@ Next_pgm( pcb_type* pcb )
 	//  Calculate total time logged on
 
 	// are we currently executing the last program?
-	if( pcb->current_prog >= NUM_PROGRAMS ){
+	if( pcb->script[pcb->current_prog] == LOGOFF ){
+		printf( "\t*******I'm here!!*****\n" );
 
 		// set the pcb's status to TERMINATED
 		pcb->status = TERMINATED_PCB;
@@ -319,6 +331,9 @@ Next_pgm( pcb_type* pcb )
 		// calculate the difference between the logon time and the current time;
 		// save the result to pcb->total_logon_time
 		Diff_time( &Clock, &pcb->total_logon_time );
+
+		// print to data file that this user has logged off
+		print_out( "\t\tUser %s has logged off.\n", pcb->username );
 
 		// do not load another program; simply return.
 		return 0;
@@ -453,7 +468,7 @@ Get_Memory( pcb_type* pcb )
 	//printf( "***line:|%s|\n", Prog_Files[ pcb->script[pcb->current_prog] ] );
 	//printf( "***num_segments:|%d|\n", num_segments );
 	//printf( "\t***PROGRAM %d\n", num_segments );
-	printf( "*****ALLOC seg_table****\n" );
+	//printf( "*****ALLOC seg_table****\n" );
 
 
 	// Allocate pcb's segment table
@@ -485,11 +500,11 @@ if( pcb->seg_table == NULL ){
 		 &pcb->seg_table[i].access
 		);
 
-		if( i==0 ){
-			pcb->seg_table[i].base = 0;
-		} else {
-			pcb->seg_table[i].base = pcb->seg_table[i-1].base + pcb->seg_table[i-1].size;
-		}
+		//if( i==0 ){
+			//pcb->seg_table[i].base = 0;
+		//} else {
+			//pcb->seg_table[i].base = pcb->seg_table[i-1].base + pcb->seg_table[i-1].size;
+		//}
 
 		// TODO: remove debug hard code
 		//pcb->seg_table[i].access = 'X';
@@ -737,7 +752,7 @@ Loader( pcb_type* pcb )
 			Display_pgm( pcb->seg_table, i, pcb );
 	}
 
-	print_out( "\t\tProgram number %d, %s, has been loaded for user %s\n\n",
+	print_out( "\t\tProgram number %d, %s, has been loaded for user %s.\n\n",
 	 pcb->current_prog + 1,
 	 Prog_Names[pcb->script[pcb->current_prog]],
 	 pcb->username
@@ -772,7 +787,7 @@ Dealloc_pgm( pcb_type* pcb )
 	}
 
 	// TODO: remove debug print
-	printf( "*****FREE seg_table****\n" );
+	//printf( "*****FREE seg_table****\n" );
 
 	free( pcb->seg_table );
 	pcb->seg_table = NULL;
@@ -812,6 +827,7 @@ Dealloc_pgm( pcb_type* pcb )
 	@param[in] size -- size of memory block being freed
 	@retval None
  */
+/* mine below
 void
 Dealloc_seg( int base, int size )
 {
@@ -885,6 +901,71 @@ Dealloc_seg( int base, int size )
 
 	Merge_seg( last, new_segment, new_segment->next );
 
+}
+*/
+void
+Dealloc_seg( int base, int size )
+{
+        //Temporary variables
+        seg_list* temp = Free_Mem;
+        seg_list* temp_prev = NULL;
+        
+        //Create new segment of memory
+        seg_list* new_mem = malloc(sizeof(seg_list));
+
+        //Initialize new memory to contain arguments passed into function
+        new_mem->base = base;
+        new_mem->size = size;
+        new_mem->next = NULL;
+        
+        //Increment total amount of available free memory
+        Total_Free += size;
+        
+        //Determine placement in the Free_Mem list
+        if(Free_Mem == NULL){
+                //Goes at the front of the list if the free list is empty
+                Free_Mem = new_mem;
+        }
+        else{
+                //Traverse the list until we find the correct placement for the new memory
+                while(temp != NULL){
+                        if(temp->base > base){
+                                //Check to make sure we're not inserting at the very front
+                                if(temp_prev == NULL){
+                                        //Insert at the front
+                                        Free_Mem = new_mem;
+                                        new_mem->next = temp;
+                                        //Merge Adjacent cells in memory
+                                        Merge_seg(NULL, new_mem, temp);
+                                        //Exit the search
+                                        break;
+                                }
+                                //Must fall between the current node and the previous
+                                else{
+                                        //Insert in between nodes
+                                        temp_prev->next = new_mem;
+                                        new_mem->next = temp;
+                                        //Merge adjacent cells in memory
+                                        Merge_seg(temp_prev, new_mem, temp);
+                                        //Exit the search
+                                        break;
+                                }
+                        }
+                        //Search condition unsatisfied, so check if we're at the end of the list
+                        else if(temp->next == NULL){
+                                //Insert at the end of the list
+                                temp->next = new_mem;
+                                //Merge adjacent cells in memory
+                                Merge_seg(temp, new_mem, NULL);
+                                //Done with the search, so exit the loop
+                                break;
+                        }
+                        
+                        //Increment position in the list
+                        temp_prev = temp;
+                        temp = temp->next;
+                }
+        }
 }
 
 /**
@@ -1035,10 +1116,12 @@ End_Service( )
 //printf( "\t***pcb->script:|%d|\n", pcb->script[ pcb->current_prog ] );
 //printf( "\t***pcb->current_prog:|%d|\n", pcb->current_prog );
 
-	print_out( "\t\tProgram number %d, %s, has ended for user %s\n",
-	 pcb->current_prog, Prog_Names[pcb->script[pcb->current_prog]], pcb->username
+	print_out( "\t\tProgram number %d, %s, has ended for user %s.\n",
+	 pcb->current_prog, Prog_Names[pcb->script[pcb->current_prog-1]], pcb->username
 	);
-	print_out( "\t\tCPU burst was %d instructions.\n", CPU.CPU_burst );
+	// TODO remove hard-coded 0 & replace with line below
+	//print_out( "\t\tCPU burst was %d instructions.\n", CPU.CPU_burst );
+	print_out( "\t\tCPU burst was %d instructions.\n\n", 0 );
 
 	// If objective 4 or higher
 	//  Deallocate all I/O request blocks associated with PCB--call Purge_rb()
@@ -1047,9 +1130,15 @@ End_Service( )
 		;
 	}
 
+	// TODO remove debug print
+	printf( "|%d|\n", pcb->script[pcb->current_prog] );
+
 	// If the PCB has no outstanding I/O request blocks
 	//	Load the next program for the user--call Next_pgm()
 	if( pcb->rb_q == NULL ){
+		// TODO remove debug print
+		printf( "\tcalling Next_Pgm\n" );
+
 		Next_pgm( pcb );
 	}
 

@@ -1,7 +1,7 @@
 
  +-----------------------------------------------------+
  |  COP 4600                          Simulator Report |
- |  DATE:  Fri Mar 23 18:01:47 2012                    |
+ |  DATE:  Sat Mar 24 15:53:02 2012                    |
  |  NAME:  data3                                       |
  |                                                     |
  |  OBJECTIVE # ...........................3           |
@@ -38,575 +38,619 @@
  LOGON  U001   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
 
 	Script for user U001 is:
-	EDITOR  COMPILER  EDITOR  COMPILER  LINKER  USER  LOGOFF  
+	EDITOR  COMPILER  EDITOR  COMPILER  LINKER  USER  LOGOFF
 
-   SEGMENT #0 OF PROGRAM EDITOR OF PROCESS U001
-   ACCBITS: 0B  LENGTH: 4
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     75      
-          1  DISK    150     
-          2  SKIP    0       
-          3  JUMP    [1,0]
+	SEGMENT #0 OF PROGRAM EDITOR OF PROCESS U001
+	ACCBITS: 0B  LENGTH: 4
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     75
+	       1  DISK    150
+	       2  SKIP    0
+	       3  JUMP    [1,0]
 
-   SEGMENT #1 OF PROGRAM EDITOR OF PROCESS U001
-   ACCBITS: A0  LENGTH: 7
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          4  SIO     40      
-          5  DSK2    10      
-          6  WIO     50      
-          7  REQ     [0,1]
-          8  WIO     0       
-          9  REQ     [1,1]
-         10  END     20      
+	SEGMENT #1 OF PROGRAM EDITOR OF PROCESS U001
+	ACCBITS: A0  LENGTH: 7
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     40
+	       1  DSK2    10
+	       2  WIO     50
+	       3  REQ     [0,1]
+	       4  WIO     0
+	       5  REQ     [1,1]
+	       6  END     20
 
-		Program number 1, EDITOR, has been loaded for user U001
+		Program number 1, EDITOR, has been loaded for user U001.
 
  LOGON  U002   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
 
 	Script for user U002 is:
-	EDITOR  PRINTER  LOGOFF  
+	EDITOR  PRINTER  LOGOFF
 
-   SEGMENT #0 OF PROGRAM EDITOR OF PROCESS U002
-   ACCBITS: FF  LENGTH: 9
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     10      
-          1  DISK    45      
-          2  WIO     0       
-          3  REQ     [0,1]
-          4  SIO     250     
-          5  RDSK    40      
-          6  WIO     5000    
-          7  REQ     [0,5]
-          8  END     10      
+	SEGMENT #0 OF PROGRAM EDITOR OF PROCESS U002
+	ACCBITS: FF  LENGTH: 9
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     10
+	       1  DISK    45
+	       2  WIO     0
+	       3  REQ     [0,1]
+	       4  SIO     250
+	       5  RDSK    40
+	       6  WIO     5000
+	       7  REQ     [0,5]
+	       8  END     10
 
-		Program number 1, EDITOR, has been loaded for user U002
+		Program number 1, EDITOR, has been loaded for user U002.
 
  LOGON  U004   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:  0
 
 	Script for user U004 is:
-	USER  USER  PRINTER  LOGOFF  
+	USER  USER  PRINTER  LOGOFF
 
-   SEGMENT #0 OF PROGRAM USER OF PROCESS U004
-   ACCBITS: 10  LENGTH: 5
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     1400    
-          1  LPRT    40      
-          2  WIO     100     
-          3  REQ     [0,1]
-          4  END     60      
+	SEGMENT #0 OF PROGRAM USER OF PROCESS U004
+	ACCBITS: 10  LENGTH: 5
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     1400
+	       1  LPRT    40
+	       2  WIO     100
+	       3  REQ     [0,1]
+	       4  END     60
 
-		Program number 1, USER, has been loaded for user U004
+		Program number 1, USER, has been loaded for user U004.
 
  LOGON  U005   HR:       0 MN: 0 SC: 0 MS:  0 mS:  0 NS:500
 
 	Script for user U005 is:
-	EDITOR  PRINTER  EDITOR  LOGOFF  
+	EDITOR  PRINTER  EDITOR  LOGOFF
 
-   SEGMENT #0 OF PROGRAM EDITOR OF PROCESS U005
-   ACCBITS: AA  LENGTH: 8
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     50      
-          1  DSK2    10      
-          2  SIO     50      
-          3  RDSK    40      
-          4  WIO     100     
-          5  REQ     [0,1]
-          6  SKIP    0       
-          7  JUMP    [2,0]
+	SEGMENT #0 OF PROGRAM EDITOR OF PROCESS U005
+	ACCBITS: AA  LENGTH: 8
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     50
+	       1  DSK2    10
+	       2  SIO     50
+	       3  RDSK    40
+	       4  WIO     100
+	       5  REQ     [0,1]
+	       6  SKIP    0
+	       7  JUMP    [2,0]
 
-   SEGMENT #1 OF PROGRAM EDITOR OF PROCESS U005
-   ACCBITS: BB  LENGTH: 3
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          8  WIO     5       
-          9  REQ     [2,3]
-         10  END     75      
+	SEGMENT #1 OF PROGRAM EDITOR OF PROCESS U005
+	ACCBITS: BB  LENGTH: 3
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  WIO     5
+	       1  REQ     [2,3]
+	       2  END     75
 
-   SEGMENT #2 OF PROGRAM EDITOR OF PROCESS U005
-   ACCBITS: FF  LENGTH: 6
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-         11  WIO     63      
-         12  REQ     [0,3]
-         13  SIO     50      
-         14  PRT1    50      
-         15  SKIP    0       
-         16  JUMP    [1,0]
+	SEGMENT #2 OF PROGRAM EDITOR OF PROCESS U005
+	ACCBITS: FF  LENGTH: 6
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  WIO     63
+	       1  REQ     [0,3]
+	       2  SIO     50
+	       3  PRT1    50
+	       4  SKIP    0
+	       5  JUMP    [1,0]
 
-		Program number 1, EDITOR, has been loaded for user U005
+		Program number 1, EDITOR, has been loaded for user U005.
 
  LOGON  U003   HR:       0 MN: 0 SC: 0 MS:  0 mS:  1 NS:  0
 
 	Script for user U003 is:
-	COMPILER  LINKER  USER  EDITOR  PRINTER  LOGOFF  
+	COMPILER  LINKER  USER  EDITOR  PRINTER  LOGOFF
 
-   SEGMENT #0 OF PROGRAM COMPILER OF PROCESS U003
-   ACCBITS: FF  LENGTH: 6
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     30      
-          1  DISK    300     
-          2  SIO     80      
-          3  RDSK    300     
-          4  SKIP    0       
-          5  JUMP    [1,0]
+	SEGMENT #0 OF PROGRAM COMPILER OF PROCESS U003
+	ACCBITS: FF  LENGTH: 6
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     30
+	       1  DISK    300
+	       2  SIO     80
+	       3  RDSK    300
+	       4  SKIP    0
+	       5  JUMP    [1,0]
 
-   SEGMENT #1 OF PROGRAM COMPILER OF PROCESS U003
-   ACCBITS: FF  LENGTH: 8
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          6  SIO     1000    
-          7  RDSK    150     
-          8  WIO     100     
-          9  REQ     [0,1]
-         10  WIO     0       
-         11  REQ     [0,3]
-         12  SKIP    0       
-         13  JUMP    [2,0]
+	SEGMENT #1 OF PROGRAM COMPILER OF PROCESS U003
+	ACCBITS: FF  LENGTH: 8
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     1000
+	       1  RDSK    150
+	       2  WIO     100
+	       3  REQ     [0,1]
+	       4  WIO     0
+	       5  REQ     [0,3]
+	       6  SKIP    0
+	       7  JUMP    [2,0]
 
-   SEGMENT #2 OF PROGRAM COMPILER OF PROCESS U003
-   ACCBITS: FF  LENGTH: 11
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-         14  WIO     1000    
-         15  REQ     [1,1]
-         16  SIO     400     
-         17  DSK2    35      
-         18  SIO     75      
-         19  PRT1    70      
-         20  WIO     50      
-         21  REQ     [2,3]
-         22  WIO     0       
-         23  REQ     [2,5]
-         24  END     75      
+	SEGMENT #2 OF PROGRAM COMPILER OF PROCESS U003
+	ACCBITS: FF  LENGTH: 11
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  WIO     1000
+	       1  REQ     [1,1]
+	       2  SIO     400
+	       3  DSK2    35
+	       4  SIO     75
+	       5  PRT1    70
+	       6  WIO     50
+	       7  REQ     [2,3]
+	       8  WIO     0
+	       9  REQ     [2,5]
+	      10  END     75
 
-		Program number 1, COMPILER, has been loaded for user U003
+		Program number 1, COMPILER, has been loaded for user U003.
 
  END    U001   HR:       0 MN: 0 SC: 0 MS: 50 mS: 47 NS:450
 
-		Program number 1, COMPILER, has ended for user U001
-		CPU burst was 2000000 instructions.
-   SEGMENT #0 OF PROGRAM COMPILER OF PROCESS U001
-   ACCBITS: 10  LENGTH: 6
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     30      
-          1  DSK2    100     
-          2  SIO     80      
-          3  RDSK    200     
-          4  SKIP    0       
-          5  JUMP    [1,0]
+		Program number 1, EDITOR, has ended for user U001.
+		CPU burst was 0 instructions.
 
-   SEGMENT #1 OF PROGRAM COMPILER OF PROCESS U001
-   ACCBITS: 20  LENGTH: 8
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          6  SIO     1000    
-          7  RDSK    50      
-          8  WIO     100     
-          9  REQ     [0,1]
-         10  WIO     0       
-         11  REQ     [0,3]
-         12  SKIP    0       
-         13  JUMP    [2,0]
+	SEGMENT #0 OF PROGRAM COMPILER OF PROCESS U001
+	ACCBITS: 10  LENGTH: 6
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     30
+	       1  DSK2    100
+	       2  SIO     80
+	       3  RDSK    200
+	       4  SKIP    0
+	       5  JUMP    [1,0]
 
-   SEGMENT #2 OF PROGRAM COMPILER OF PROCESS U001
-   ACCBITS: 30  LENGTH: 7
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-         14  WIO     1000    
-         15  REQ     [1,1]
-         16  SIO     500     
-         17  DSK2    50      
-         18  WIO     50      
-         19  REQ     [2,3]
-         20  END     75      
+	SEGMENT #1 OF PROGRAM COMPILER OF PROCESS U001
+	ACCBITS: 20  LENGTH: 8
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     1000
+	       1  RDSK    50
+	       2  WIO     100
+	       3  REQ     [0,1]
+	       4  WIO     0
+	       5  REQ     [0,3]
+	       6  SKIP    0
+	       7  JUMP    [2,0]
 
-		Program number 2, COMPILER, has been loaded for user U001
+	SEGMENT #2 OF PROGRAM COMPILER OF PROCESS U001
+	ACCBITS: 30  LENGTH: 7
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  WIO     1000
+	       1  REQ     [1,1]
+	       2  SIO     500
+	       3  DSK2    50
+	       4  WIO     50
+	       5  REQ     [2,3]
+	       6  END     75
+
+		Program number 2, COMPILER, has been loaded for user U001.
 
  END    U005   HR:       0 MN: 0 SC: 0 MS: 77 mS:711 NS:870
 
-		Program number 1, PRINTER, has ended for user U005
-		CPU burst was 2000000 instructions.
-   SEGMENT #0 OF PROGRAM PRINTER OF PROCESS U005
-   ACCBITS: FF  LENGTH: 5
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     40      
-          1  LPRT    35      
-          2  WIO     0       
-          3  REQ     [0,1]
-          4  END     30      
+		Program number 1, EDITOR, has ended for user U005.
+		CPU burst was 0 instructions.
 
-		Program number 2, PRINTER, has been loaded for user U005
+	SEGMENT #0 OF PROGRAM PRINTER OF PROCESS U005
+	ACCBITS: FF  LENGTH: 5
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     40
+	       1  LPRT    35
+	       2  WIO     0
+	       3  REQ     [0,1]
+	       4  END     30
+
+		Program number 2, PRINTER, has been loaded for user U005.
 
  END    U002   HR:       0 MN: 0 SC: 0 MS:104 mS:892 NS:240
 
-		Program number 1, PRINTER, has ended for user U002
-		CPU burst was 2000000 instructions.
-   SEGMENT #0 OF PROGRAM PRINTER OF PROCESS U002
-   ACCBITS: EE  LENGTH: 6
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     10      
-          1  PRT1    10      
-          2  WIO     10      
-          3  REQ     [0,1]
-          4  SKIP    0       
-          5  JUMP    [1,0]
+		Program number 1, EDITOR, has ended for user U002.
+		CPU burst was 0 instructions.
 
-   SEGMENT #1 OF PROGRAM PRINTER OF PROCESS U002
-   ACCBITS: 0F  LENGTH: 5
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          6  SIO     10      
-          7  PRT1    20      
-          8  WIO     10      
-          9  REQ     [1,1]
-         10  END     10      
+	SEGMENT #0 OF PROGRAM PRINTER OF PROCESS U002
+	ACCBITS: EE  LENGTH: 6
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     10
+	       1  PRT1    10
+	       2  WIO     10
+	       3  REQ     [0,1]
+	       4  SKIP    0
+	       5  JUMP    [1,0]
 
-		Program number 2, PRINTER, has been loaded for user U002
+	SEGMENT #1 OF PROGRAM PRINTER OF PROCESS U002
+	ACCBITS: 0F  LENGTH: 5
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     10
+	       1  PRT1    20
+	       2  WIO     10
+	       3  REQ     [1,1]
+	       4  END     10
+
+		Program number 2, PRINTER, has been loaded for user U002.
 
  END    U001   HR:       0 MN: 0 SC: 0 MS:114 mS:127 NS:120
 
-		Program number 2, EDITOR, has ended for user U001
-		CPU burst was 2000000 instructions.
-   SEGMENT #0 OF PROGRAM EDITOR OF PROCESS U001
-   ACCBITS: 1F  LENGTH: 10
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SKIP    0       
-          1  JUMP    [1,0]
-          2  SIO     15      
-          3  RDSK    50      
-          4  WIO     5       
-          5  REQ     [0,3]
-          6  WIO     10      
-          7  REQ     [1,1]
-          8  SKIP    0       
-          9  JUMP    [1,4]
+		Program number 2, COMPILER, has ended for user U001.
+		CPU burst was 0 instructions.
 
-   SEGMENT #1 OF PROGRAM EDITOR OF PROCESS U001
-   ACCBITS: 7C  LENGTH: 5
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-         10  SIO     20      
-         11  RDSK    50      
-         12  SKIP    0       
-         13  JUMP    [0,2]
-         14  END     40      
+	SEGMENT #0 OF PROGRAM EDITOR OF PROCESS U001
+	ACCBITS: 1F  LENGTH: 10
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SKIP    0
+	       1  JUMP    [1,0]
+	       2  SIO     15
+	       3  RDSK    50
+	       4  WIO     5
+	       5  REQ     [0,3]
+	       6  WIO     10
+	       7  REQ     [1,1]
+	       8  SKIP    0
+	       9  JUMP    [1,4]
 
-		Program number 3, EDITOR, has been loaded for user U001
+	SEGMENT #1 OF PROGRAM EDITOR OF PROCESS U001
+	ACCBITS: 7C  LENGTH: 5
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     20
+	       1  RDSK    50
+	       2  SKIP    0
+	       3  JUMP    [0,2]
+	       4  END     40
+
+		Program number 3, EDITOR, has been loaded for user U001.
 
  END    U001   HR:       0 MN: 0 SC: 0 MS:127 mS:495 NS:420
 
-		Program number 3, COMPILER, has ended for user U001
-		CPU burst was 2000000 instructions.
-   SEGMENT #0 OF PROGRAM COMPILER OF PROCESS U001
-   ACCBITS: 10  LENGTH: 6
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     30      
-          1  DISK    250     
-          2  SIO     80      
-          3  RDSK    50      
-          4  SKIP    0       
-          5  JUMP    [1,0]
+		Program number 3, EDITOR, has ended for user U001.
+		CPU burst was 0 instructions.
 
-   SEGMENT #1 OF PROGRAM COMPILER OF PROCESS U001
-   ACCBITS: 20  LENGTH: 8
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          6  SIO     1000    
-          7  RDSK    45      
-          8  WIO     100     
-          9  REQ     [0,1]
-         10  WIO     0       
-         11  REQ     [0,3]
-         12  SKIP    0       
-         13  JUMP    [2,0]
+	SEGMENT #0 OF PROGRAM COMPILER OF PROCESS U001
+	ACCBITS: 10  LENGTH: 6
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     30
+	       1  DISK    250
+	       2  SIO     80
+	       3  RDSK    50
+	       4  SKIP    0
+	       5  JUMP    [1,0]
 
-   SEGMENT #2 OF PROGRAM COMPILER OF PROCESS U001
-   ACCBITS: 30  LENGTH: 7
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-         14  WIO     1000    
-         15  REQ     [1,1]
-         16  SIO     400     
-         17  DISK    180     
-         18  WIO     50      
-         19  REQ     [2,3]
-         20  END     75      
+	SEGMENT #1 OF PROGRAM COMPILER OF PROCESS U001
+	ACCBITS: 20  LENGTH: 8
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     1000
+	       1  RDSK    45
+	       2  WIO     100
+	       3  REQ     [0,1]
+	       4  WIO     0
+	       5  REQ     [0,3]
+	       6  SKIP    0
+	       7  JUMP    [2,0]
 
-		Program number 4, COMPILER, has been loaded for user U001
+	SEGMENT #2 OF PROGRAM COMPILER OF PROCESS U001
+	ACCBITS: 30  LENGTH: 7
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  WIO     1000
+	       1  REQ     [1,1]
+	       2  SIO     400
+	       3  DISK    180
+	       4  WIO     50
+	       5  REQ     [2,3]
+	       6  END     75
+
+		Program number 4, COMPILER, has been loaded for user U001.
 
  END    U004   HR:       0 MN: 0 SC: 0 MS:160 mS:817 NS:500
 
-		Program number 1, USER, has ended for user U004
-		CPU burst was 2000000 instructions.
-   SEGMENT #0 OF PROGRAM USER OF PROCESS U004
-   ACCBITS: 20  LENGTH: 10
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     500     
-          1  DISK    150     
-          2  SIO     20      
-          3  RDSK    300     
-          4  WIO     10      
-          5  REQ     [0,1]
-          6  WIO     100     
-          7  REQ     [0,3]
-          8  SKIP    0       
-          9  JUMP    [1,0]
+		Program number 1, USER, has ended for user U004.
+		CPU burst was 0 instructions.
 
-   SEGMENT #1 OF PROGRAM USER OF PROCESS U004
-   ACCBITS: 30  LENGTH: 9
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-         10  SIO     3500    
-         11  PRT1    195     
-         12  SIO     100     
-         13  PRT1    90      
-         14  WIO     400     
-         15  REQ     [1,1]
-         16  WIO     400     
-         17  REQ     [1,3]
-         18  END     50      
+	SEGMENT #0 OF PROGRAM USER OF PROCESS U004
+	ACCBITS: 20  LENGTH: 10
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     500
+	       1  DISK    150
+	       2  SIO     20
+	       3  RDSK    300
+	       4  WIO     10
+	       5  REQ     [0,1]
+	       6  WIO     100
+	       7  REQ     [0,3]
+	       8  SKIP    0
+	       9  JUMP    [1,0]
 
-		Program number 2, USER, has been loaded for user U004
+	SEGMENT #1 OF PROGRAM USER OF PROCESS U004
+	ACCBITS: 30  LENGTH: 9
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     3500
+	       1  PRT1    195
+	       2  SIO     100
+	       3  PRT1    90
+	       4  WIO     400
+	       5  REQ     [1,1]
+	       6  WIO     400
+	       7  REQ     [1,3]
+	       8  END     50
+
+		Program number 2, USER, has been loaded for user U004.
 
  END    U003   HR:       0 MN: 0 SC: 0 MS:290 mS:812 NS:385
 
-		Program number 1, LINKER, has ended for user U003
-		CPU burst was 2000000 instructions.
-   SEGMENT #0 OF PROGRAM LINKER OF PROCESS U003
-   ACCBITS: CF  LENGTH: 6
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     50      
-          1  DISK    100     
-          2  WIO     175     
-          3  REQ     [0,1]
-          4  SKIP    0       
-          5  JUMP    [1,0]
+		Program number 1, COMPILER, has ended for user U003.
+		CPU burst was 0 instructions.
 
-   SEGMENT #1 OF PROGRAM LINKER OF PROCESS U003
-   ACCBITS: FC  LENGTH: 5
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          6  SIO     4500    
-          7  DISK    170     
-          8  WIO     700     
-          9  REQ     [1,1]
-         10  END     150     
+	SEGMENT #0 OF PROGRAM LINKER OF PROCESS U003
+	ACCBITS: CF  LENGTH: 6
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     50
+	       1  DISK    100
+	       2  WIO     175
+	       3  REQ     [0,1]
+	       4  SKIP    0
+	       5  JUMP    [1,0]
 
-		Program number 2, LINKER, has been loaded for user U003
+	SEGMENT #1 OF PROGRAM LINKER OF PROCESS U003
+	ACCBITS: FC  LENGTH: 5
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     4500
+	       1  DISK    170
+	       2  WIO     700
+	       3  REQ     [1,1]
+	       4  END     150
+
+		Program number 2, LINKER, has been loaded for user U003.
 
  END    U005   HR:       0 MN: 0 SC: 0 MS:300 mS:802 NS:500
 
-		Program number 2, EDITOR, has ended for user U005
-		CPU burst was 2000000 instructions.
-   SEGMENT #0 OF PROGRAM EDITOR OF PROCESS U005
-   ACCBITS: 90  LENGTH: 4
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     35      
-          1  DSK2    75      
-          2  SKIP    0       
-          3  JUMP    [1,0]
+		Program number 2, PRINTER, has ended for user U005.
+		CPU burst was 0 instructions.
 
-   SEGMENT #1 OF PROGRAM EDITOR OF PROCESS U005
-   ACCBITS: 10  LENGTH: 3
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          4  WIO     85      
-          5  REQ     [0,1]
-          6  END     10      
+	SEGMENT #0 OF PROGRAM EDITOR OF PROCESS U005
+	ACCBITS: 90  LENGTH: 4
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     35
+	       1  DSK2    75
+	       2  SKIP    0
+	       3  JUMP    [1,0]
 
-		Program number 3, EDITOR, has been loaded for user U005
+	SEGMENT #1 OF PROGRAM EDITOR OF PROCESS U005
+	ACCBITS: 10  LENGTH: 3
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  WIO     85
+	       1  REQ     [0,1]
+	       2  END     10
+
+		Program number 3, EDITOR, has been loaded for user U005.
 
  END    U001   HR:       0 MN: 0 SC: 0 MS:320 mS:881 NS: 60
 
-		Program number 4, LINKER, has ended for user U001
-		CPU burst was 2000000 instructions.
-   SEGMENT #0 OF PROGRAM LINKER OF PROCESS U001
-   ACCBITS: C7  LENGTH: 12
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     50      
-          1  DISK    200     
-          2  SIO     0       
-          3  DSK2    100     
-          4  SIO     90      
-          5  RDSK    25      
-          6  WIO     100     
-          7  REQ     [0,3]
-          8  WIO     75      
-          9  REQ     [0,5]
-         10  SKIP    0       
-         11  JUMP    [1,0]
+		Program number 4, COMPILER, has ended for user U001.
+		CPU burst was 0 instructions.
 
-   SEGMENT #1 OF PROGRAM LINKER OF PROCESS U001
-   ACCBITS: 0A  LENGTH: 6
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-         12  WIO     400     
-         13  REQ     [0,1]
-         14  SIO     5000    
-         15  DISK    275     
-         16  SKIP    0       
-         17  JUMP    [2,0]
+	SEGMENT #0 OF PROGRAM LINKER OF PROCESS U001
+	ACCBITS: C7  LENGTH: 12
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     50
+	       1  DISK    200
+	       2  SIO     0
+	       3  DSK2    100
+	       4  SIO     90
+	       5  RDSK    25
+	       6  WIO     100
+	       7  REQ     [0,3]
+	       8  WIO     75
+	       9  REQ     [0,5]
+	      10  SKIP    0
+	      11  JUMP    [1,0]
 
-   SEGMENT #2 OF PROGRAM LINKER OF PROCESS U001
-   ACCBITS: F0  LENGTH: 7
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-         18  SIO     200     
-         19  PRT1    45      
-         20  WIO     10      
-         21  REQ     [1,3]
-         22  WIO     50      
-         23  REQ     [2,1]
-         24  END     30      
+	SEGMENT #1 OF PROGRAM LINKER OF PROCESS U001
+	ACCBITS: 0A  LENGTH: 6
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  WIO     400
+	       1  REQ     [0,1]
+	       2  SIO     5000
+	       3  DISK    275
+	       4  SKIP    0
+	       5  JUMP    [2,0]
 
-		Program number 5, LINKER, has been loaded for user U001
+	SEGMENT #2 OF PROGRAM LINKER OF PROCESS U001
+	ACCBITS: F0  LENGTH: 7
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     200
+	       1  PRT1    45
+	       2  WIO     10
+	       3  REQ     [1,3]
+	       4  WIO     50
+	       5  REQ     [2,1]
+	       6  END     30
+
+		Program number 5, LINKER, has been loaded for user U001.
 
  END    U005   HR:       0 MN: 0 SC: 0 MS:322 mS:253 NS:550
 
-		Program number 3, EDITOR, has ended for user U005
-		CPU burst was 2000000 instructions.
-   SEGMENT #0 OF PROGRAM EDITOR OF PROCESS U005
-   ACCBITS: CC  LENGTH: 9
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     10      
-          1  PRT1    50      
-          2  SIO     40      
-          3  LPRT    30      
-          4  WIO     5       
-          5  REQ     [0,3]
-          6  WIO     10      
-          7  REQ     [0,1]
-          8  END     15      
+		Program number 3, EDITOR, has ended for user U005.
+		CPU burst was 0 instructions.
 
-		Program number 4, EDITOR, has been loaded for user U005
-
+		User U005 has logged off.
  END    U002   HR:       0 MN: 0 SC: 0 MS:340 mS:779 NS:885
 
-		Program number 2, EDITOR, has ended for user U002
-		CPU burst was 2000000 instructions.
+		Program number 2, PRINTER, has ended for user U002.
+		CPU burst was 0 instructions.
+
+		User U002 has logged off.
  END    U003   HR:       0 MN: 0 SC: 0 MS:477 mS:585 NS: 70
 
-		Program number 2, USER, has ended for user U003
-		CPU burst was 2000000 instructions.
-   SEGMENT #0 OF PROGRAM USER OF PROCESS U003
-   ACCBITS: 15  LENGTH: 5
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     40      
-          1  DISK    10      
-          2  WIO     500     
-          3  REQ     [0,1]
-          4  END     5000    
+		Program number 2, LINKER, has ended for user U003.
+		CPU burst was 0 instructions.
 
-		Program number 3, USER, has been loaded for user U003
+	SEGMENT #0 OF PROGRAM USER OF PROCESS U003
+	ACCBITS: 15  LENGTH: 5
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     40
+	       1  DISK    10
+	       2  WIO     500
+	       3  REQ     [0,1]
+	       4  END     5000
+
+		Program number 3, USER, has been loaded for user U003.
 
  END    U004   HR:       0 MN: 0 SC: 0 MS:565 mS:799 NS:885
 
-		Program number 2, PRINTER, has ended for user U004
-		CPU burst was 2000000 instructions.
-   SEGMENT #0 OF PROGRAM PRINTER OF PROCESS U004
-   ACCBITS: 0A  LENGTH: 10
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     5       
-          1  PRT1    10      
-          2  SKIP    1       
-          3  JUMP    [1,0]
-          4  SKIP    1       
-          5  JUMP    [2,0]
-          6  SKIP    1       
-          7  JUMP    [3,0]
-          8  SKIP    0       
-          9  JUMP    [3,0]
+		Program number 2, USER, has ended for user U004.
+		CPU burst was 0 instructions.
 
-   SEGMENT #1 OF PROGRAM PRINTER OF PROCESS U004
-   ACCBITS: 0B  LENGTH: 8
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-         10  SKIP    2       
-         11  JUMP    [1,4]
-         12  SIO     30      
-         13  PRT1    30      
-         14  SKIP    1       
-         15  JUMP    [3,0]
-         16  SKIP    0       
-         17  JUMP    [2,0]
+	SEGMENT #0 OF PROGRAM PRINTER OF PROCESS U004
+	ACCBITS: 0A  LENGTH: 10
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     5
+	       1  PRT1    10
+	       2  SKIP    1
+	       3  JUMP    [1,0]
+	       4  SKIP    1
+	       5  JUMP    [2,0]
+	       6  SKIP    1
+	       7  JUMP    [3,0]
+	       8  SKIP    0
+	       9  JUMP    [3,0]
 
-   SEGMENT #2 OF PROGRAM PRINTER OF PROCESS U004
-   ACCBITS: 0C  LENGTH: 3
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-         18  WIO     20      
-         19  REQ     [1,3]
-         20  END     50      
+	SEGMENT #1 OF PROGRAM PRINTER OF PROCESS U004
+	ACCBITS: 0B  LENGTH: 8
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SKIP    2
+	       1  JUMP    [1,4]
+	       2  SIO     30
+	       3  PRT1    30
+	       4  SKIP    1
+	       5  JUMP    [3,0]
+	       6  SKIP    0
+	       7  JUMP    [2,0]
 
-   SEGMENT #3 OF PROGRAM PRINTER OF PROCESS U004
-   ACCBITS: 0D  LENGTH: 4
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-         21  WIO     40      
-         22  REQ     [0,1]
-         23  SKIP    0       
-         24  JUMP    [1,0]
+	SEGMENT #2 OF PROGRAM PRINTER OF PROCESS U004
+	ACCBITS: 0C  LENGTH: 3
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  WIO     20
+	       1  REQ     [1,3]
+	       2  END     50
 
-		Program number 3, PRINTER, has been loaded for user U004
+	SEGMENT #3 OF PROGRAM PRINTER OF PROCESS U004
+	ACCBITS: 0D  LENGTH: 4
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  WIO     40
+	       1  REQ     [0,1]
+	       2  SKIP    0
+	       3  JUMP    [1,0]
+
+		Program number 3, PRINTER, has been loaded for user U004.
 
  END    U003   HR:       0 MN: 0 SC: 0 MS:575 mS:  9 NS:975
 
-		Program number 3, EDITOR, has ended for user U003
-		CPU burst was 2000000 instructions.
+		Program number 3, USER, has ended for user U003.
+		CPU burst was 0 instructions.
+
+	SEGMENT #0 OF PROGRAM EDITOR OF PROCESS U003
+	ACCBITS: CC  LENGTH: 9
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     10
+	       1  PRT1    50
+	       2  SIO     40
+	       3  LPRT    30
+	       4  WIO     5
+	       5  REQ     [0,3]
+	       6  WIO     10
+	       7  REQ     [0,1]
+	       8  END     15
+
+		Program number 4, EDITOR, has been loaded for user U003.
+
  END    U001   HR:       0 MN: 0 SC: 0 MS:605 mS:515 NS:660
 
-		Program number 5, USER, has ended for user U001
-		CPU burst was 2000000 instructions.
-   SEGMENT #0 OF PROGRAM USER OF PROCESS U001
-   ACCBITS: 45  LENGTH: 9
-   MEM ADDR  OPCODE  OPERAND
-   --------  ------  -------
-          0  SIO     100     
-          1  RDSK    25      
-          2  SKIP    3       
-          3  JUMP    [0,8]
-          4  WIO     700     
-          5  REQ     [0,1]
-          6  SKIP    0       
-          7  JUMP    [0,0]
-          8  END     50      
+		Program number 5, LINKER, has ended for user U001.
+		CPU burst was 0 instructions.
 
-		Program number 6, USER, has been loaded for user U001
+	SEGMENT #0 OF PROGRAM USER OF PROCESS U001
+	ACCBITS: 45  LENGTH: 9
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     100
+	       1  RDSK    25
+	       2  SKIP    3
+	       3  JUMP    [0,8]
+	       4  WIO     700
+	       5  REQ     [0,1]
+	       6  SKIP    0
+	       7  JUMP    [0,0]
+	       8  END     50
+
+		Program number 6, USER, has been loaded for user U001.
 
  END    U001   HR:       0 MN: 0 SC: 0 MS:612 mS:307 NS:310
 
-		Program number 6, EDITOR, has ended for user U001
-		CPU burst was 2000000 instructions.
+		Program number 6, USER, has ended for user U001.
+		CPU burst was 0 instructions.
+
+		User U001 has logged off.
  END    U003   HR:       0 MN: 0 SC: 0 MS:695 mS: 47 NS:475
 
-		Program number 8, EDITOR, has ended for user U003
-		CPU burst was 2000000 instructions.
+		Program number 4, EDITOR, has ended for user U003.
+		CPU burst was 0 instructions.
+
+	SEGMENT #0 OF PROGRAM PRINTER OF PROCESS U003
+	ACCBITS: 0E  LENGTH: 13
+	MEM ADDR  OPCODE  OPERAND
+	--------  ------  -------
+	       0  SIO     0
+	       1  LPRT    40
+	       2  SIO     0
+	       3  PRT1    50
+	       4  SIO     0
+	       5  PRT1    40
+	       6  WIO     600
+	       7  REQ     [0,3]
+	       8  WIO     100
+	       9  REQ     [0,1]
+	      10  WIO     50
+	      11  REQ     [0,5]
+	      12  END     20
+
+		Program number 5, PRINTER, has been loaded for user U003.
+
  END    U004   HR:       0 MN: 0 SC: 0 MS:719 mS:811 NS:340
 
-		Program number 3, EDITOR, has ended for user U004
-		CPU burst was 2000000 instructions.
+		Program number 3, PRINTER, has ended for user U004.
+		CPU burst was 0 instructions.
+
+		User U004 has logged off.
  END    U003   HR:       0 MN: 0 SC: 0 MS:855 mS: 82 NS:475
 
-		Program number 8, EDITOR, has ended for user U003
-		CPU burst was 2000000 instructions.
+		Program number 5, PRINTER, has ended for user U003.
+		CPU burst was 0 instructions.
+
+		User U003 has logged off.
 
 
 
@@ -615,19 +659,19 @@
  TERMNL|      EXEC      |      WAIT    |    BLOCKED   |    ELAPSED   |  %EFF
  ======|================|==============|==============|==============|=======
  U001  |           0 SC |         0 SC |         0 SC |         0 SC | 0.00
-       |           0 NS |         0 NS |         0 NS |         0 NS |
+       |           0 NS |         0 NS |         0 NS |3682659986 NS |
  ------|----------------|--------------|--------------|--------------|-------
  U002  |           0 SC |         0 SC |         0 SC |         0 SC | 0.00
-       |           0 NS |         0 NS |         0 NS |         0 NS |
+       |           0 NS |         0 NS |         0 NS |3954187411 NS |
  ------|----------------|--------------|--------------|--------------|-------
  U003  |           0 SC |         0 SC |         0 SC |         0 SC | 0.00
-       |           0 NS |         0 NS |         0 NS |2744837346 NS |
+       |           0 NS |         0 NS |         0 NS |3439884821 NS |
  ------|----------------|--------------|--------------|--------------|-------
  U004  |           0 SC |         0 SC |         0 SC |         0 SC | 0.00
-       |           0 NS |         0 NS |         0 NS |         0 NS |
+       |           0 NS |         0 NS |         0 NS |3575155956 NS |
  ------|----------------|--------------|--------------|--------------|-------
  U005  |           0 SC |         0 SC |         0 SC |         0 SC | 0.00
-       |           0 NS |         0 NS |         0 NS |         0 NS |
+       |           0 NS |         0 NS |         0 NS |3972713746 NS |
  ============================================================================
  TOTALS|           0 SC |         0 SC |         0 SC |         0 SC |
        |           0 NS |         0 NS |         0 NS |         0 NS |

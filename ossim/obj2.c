@@ -1,6 +1,6 @@
 /*******************************************************************************
 * File:      obj2.c
-* Version:   0.5
+* Version:   0.6
 * Purpose:   Implements loading the event list
 * Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
 *            Sean Szumlanski
@@ -8,7 +8,7 @@
 * Course:    COP 4600 <http://www.cs.ucf.edu/courses/cop4600/spring2012>
 * Objective: 2
 * Created:   2012-02-07
-* Updated:   2012-03-06
+* Updated:   2012-03-24
 * Notes:     This program was written to be compiled against the gnu99 standard.
 *            Please execute the following commands to build correctly:
 *
@@ -900,12 +900,12 @@ Display_pgm( segment_type* seg_table, int seg_num, pcb_type* pcb )
 
 	// loop through each segment in memory
 	counter = 0;
-	print_out( "   SEGMENT #%d OF PROGRAM %s OF PROCESS %s\n", seg_num, Prog_Names[pcb->script[pcb->current_prog]], pcb->username );
-	print_out( "   ACCBITS: %02X  LENGTH: %u\n",
+	print_out( "\tSEGMENT #%d OF PROGRAM %s OF PROCESS %s\n", seg_num, Prog_Names[pcb->script[pcb->current_prog]], pcb->username );
+	print_out( "\tACCBITS: %02X  LENGTH: %u\n",
 	 seg_table[seg_num].access, seg_table[seg_num].size
 	);
-	print_out( "   MEM ADDR  OPCODE  OPERAND\n" );
-	print_out( "   --------  ------  -------\n" );
+	print_out( "\tMEM ADDR  OPCODE  OPERAND\n" );
+	print_out( "\t--------  ------  -------\n" );
 
 	// loop through each instruction in this segment
 	for( int i=0; i<(seg_table[seg_num].size); i++ ){
@@ -919,7 +919,7 @@ Display_pgm( segment_type* seg_table, int seg_num, pcb_type* pcb )
 		//printf( "\t***i:|%d|\n", i );
 
 		// MEM ADDR
-		print_out( "%11d ", element );
+		print_out( "\t%8d ", element );
 
 		// OPCODE
 		opcode = Mem[element].opcode;
@@ -939,7 +939,7 @@ Display_pgm( segment_type* seg_table, int seg_num, pcb_type* pcb )
 			case WIO_OP:
 			case END_OP:
 				// burst
-				print_out( " %-8lu", Mem[element].operand.burst );
+				print_out( " %lu", Mem[element].operand.burst );
 				break;
 
 			case REQ_OP:
@@ -953,12 +953,12 @@ Display_pgm( segment_type* seg_table, int seg_num, pcb_type* pcb )
 
 			case SKIP_OP:
 				// count
-				print_out( " %-8u", Mem[element].operand.count );
+				print_out( " %u", Mem[element].operand.count );
 				break;
 
 			default:
 				// bytes
-				print_out( " %-8lu", Mem[element].operand.bytes );
+				print_out( " %lu", Mem[element].operand.bytes );
 		}
 
 		print_out( "\n" );
