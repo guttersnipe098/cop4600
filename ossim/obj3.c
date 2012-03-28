@@ -1,6 +1,6 @@
 /*******************************************************************************
 * File:      obj3.c
-* Version:   0.9
+* Version:   1.2
 * Purpose:   Read all remaining *.dat files, build PCB, load programs & service
 *            event interruption.
 * Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
@@ -9,20 +9,13 @@
 * Course:    COP 4600 <http://www.cs.ucf.edu/courses/cop4600/spring2012>
 * Objective: 3
 * Created:   2012-02-25
-* Updated:   2012-03-24
+* Updated:   2012-03-26
 * Notes:     This program was written to be compiled against the gnu99 standard.
 *            Please execute the following commands to build correctly:
 *
 *  CFLAGS="-g -I/home/eurip/ossim2010 --std=gnu99"
 *  export CFLAGS
 *  make -e sim
-*
-*  Note to grader: This program segfaults, but it is due to an error in
-*  simulator.c's Clean_Up() function, which is a function that I did not write
-*  nor a function that I believe I should be responsible for. I tried my
-*  best to avoid all segfaults (hence 2 days late), but this one was
-*  unavoidable as far as I can tell. If this is indeed a problem with my own
-*  code, please let me know how. Thank you.
 *******************************************************************************/
 /**
 	obj3.c
@@ -116,6 +109,26 @@ Logon_Service( )
 
 	Get_Script( pcb );
 	Next_pgm( pcb );
+
+	// TODO: revisit discrepancy
+	// TODO: revisit revisited discrepancy
+
+	//If objective 4 or higher, set scheduling flags:
+	if( Objective >= 4 ){
+		//If no process is active in the CPU currently
+		if( CPU.active_pcb == NULL ){
+			//Turn off scheduling and CPU switches
+			SCHED_SW = ON;
+			CPU_SW = ON;
+
+		//Otherwise,
+		} else {
+			//Turn on switches
+			SCHED_SW = OFF;
+			CPU_SW = OFF;
+		}
+
+	}
 
 }
 
@@ -306,11 +319,6 @@ Next_pgm( pcb_type* pcb )
 	// If process has an unserviced I/O request block
 	//  Do not load a new program
 
-	printf( "script in Next_pgm|%d|\n", pcb->script[pcb->current_prog] );
-	if( pcb->script[pcb->current_prog] == LOGOFF ){
-		printf( "\t*******I'm here!!*****\n" );
-	}
-
 	// is the process's IORB queue empty?
 	if( pcb->rb_q != NULL ){
 		// the queue is not empty; there exist unserviced IORB(s)
@@ -323,7 +331,6 @@ Next_pgm( pcb_type* pcb )
 
 	// are we currently executing the last program?
 	if( pcb->script[pcb->current_prog] == LOGOFF ){
-		printf( "\t*******I'm here!!*****\n" );
 
 		// set the pcb's status to TERMINATED
 		pcb->status = TERMINATED_PCB;
@@ -366,7 +373,10 @@ Next_pgm( pcb_type* pcb )
 	pcb->status = READY_PCB;
 
 	//If objective 4 or greater
-	// Insert process into CPU's ready queue 
+	if( Objective >= 4 ){
+		// Insert process into CPU's ready queue 
+		Add_cpuq( pcb );
+	}
 
 	// TODO: something wicked this way comes in Obj 4
 
@@ -1102,15 +1112,13 @@ End_Service( )
 	CPU.active_pcb = NULL;
 
 	// Calculate active time for process and busy time for CPU
-   // Record time process became blocked
 
 	active_time = &pcb->run_time;
 	Diff_time( &Clock, active_time );
 	Add_time( active_time, &CPU.total_busy_time );
 
-	// TODO: remove (?)
+   // Record time process became blocked
 	pcb->block_time = Clock;
-	pcb->status = BLOCKED_PCB;
 
 // TODO: remove debug
 //printf( "\t***pcb->script:|%d|\n", pcb->script[ pcb->current_prog ] );
@@ -1124,10 +1132,9 @@ End_Service( )
 	print_out( "\t\tCPU burst was %d instructions.\n\n", 0 );
 
 	// If objective 4 or higher
-	//  Deallocate all I/O request blocks associated with PCB--call Purge_rb()
 	if( Objective >= 4 ){
-		// TODO: more work for obj#4
-		;
+		//  Deallocate all I/O request blocks associated with PCB--call Purge_rb()
+		Purge_rb( pcb );
 	}
 
 	// TODO remove debug print
@@ -1136,17 +1143,14 @@ End_Service( )
 	// If the PCB has no outstanding I/O request blocks
 	//	Load the next program for the user--call Next_pgm()
 	if( pcb->rb_q == NULL ){
-		// TODO remove debug print
-		printf( "\tcalling Next_Pgm\n" );
-
 		Next_pgm( pcb );
 	}
 
 	// If objective 4 or higher
-	//	Turn both the scheduling and CPU switches on in order to retrieve the next process to run
 	if( Objective >= 4 ){
-		// TODO: more work for obj#4
-		;
+		//	Turn both the scheduling and CPU switches on in order to retrieve the next process to run
+		SCHED_SW = ON;
+		CPU_SW = ON;
 	}
 
 }

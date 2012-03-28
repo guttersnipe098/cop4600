@@ -1,6 +1,6 @@
 /*******************************************************************************
 * File:      obj2.c
-* Version:   0.7
+* Version:   0.8
 * Purpose:   Implements loading the event list
 * Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
 *            Sean Szumlanski
