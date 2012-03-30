@@ -219,6 +219,7 @@ Add_rblist( pcb_type* pcb, rb_type* rb)
 
 	//Create and initialize request block node
 	rbNode = (struct rb_list*) calloc( 1, sizeof(struct rb_list) );
+	rbNode->rb = rb;
 
 	//If request block queue is empty
 	if( pcb->rb_q == NULL ){
@@ -329,8 +330,7 @@ Scheduler( )
 	Add_time( &nextPcb->ready_time, &CPU.total_q_time );
 
 	//Reset the burst count for the next program
-	// TODO: change to sjnburst?
-	CPU.CPU_burst = 0;
+	nextPcb->sjnburst = 0;
 
 	return nextPcb;
 }
@@ -1211,12 +1211,40 @@ Load_Map( segment_type *seg_tab, int num_segments )
 	@retval None
  */
 void
-Dump_rblist( )
+Dump_rblist( pcb_type* pcb )
 {
 	// if debug flag is turned on
 	if( DEBUG_RBLIST )
 	{
-		/* print debugging message */
+
+		// DECLARE VARIABLES
+		struct rb_list* curr;
+		int i;
+
+		curr = pcb->rb_q;
+
+		if( curr == NULL ){
+			printf( "DEBUG: pcb->rb_q is NULL\n" );
+			return;
+		}
+
+		// iterate through each node in the rb_list
+		i = 0;
+		do{
+
+			//printf( "DEBUG: pcb->rb_q node #%d, rT:|%d| pT:|%d| id:|%d| b:|%d|\n",
+			 //i, curr->rb->status, curr->rb->pcb->status, curr->rb->dev_id,
+			 //curr->rb->bytes
+			//);
+			printf( "DEBUG: pcb->rb_q node #%d rT:|%x|\n",
+			 i, curr->rb
+			);
+
+			// iterate to the next node in the rb_list
+			curr = curr->next;
+			i++;
+
+		} while( curr != NULL && curr != pcb->rb_q );
 	}
 	else // do not print any message
 	{ ; }

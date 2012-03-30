@@ -509,7 +509,6 @@ Cpu( )
 				Add_time( &Clock, &sim_time );
 				Add_Event( SIO_EVT, agent_id, &sim_time );
 				CPU.state.pc.offset = CPU.state.pc.offset + 2; // skip next instr
-				CPU.CPU_burst = CPU.CPU_burst + 1;
 				return;
 
 			case WIO_OP:
@@ -524,7 +523,6 @@ Cpu( )
 				Add_time( &Clock, &sim_time );
 				Add_Event( WIO_EVT, agent_id, &sim_time );
 				CPU.state.pc.offset = CPU.state.pc.offset + 2; // skip next instr
-				CPU.CPU_burst = CPU.CPU_burst + 1;
 				return;
 
 			case END_OP:
@@ -539,7 +537,6 @@ Cpu( )
 				Add_time( &Clock, &sim_time );
 				Add_Event( END_EVT, agent_id, &sim_time );
 				CPU.state.pc.offset = CPU.state.pc.offset + 2; // skip next instr
-				CPU.CPU_burst = CPU.CPU_burst + 1;
 				return;
 
 			case SKIP_OP:

@@ -1127,9 +1127,7 @@ End_Service( )
 	print_out( "\t\tProgram number %d, %s, has ended for user %s.\n",
 	 pcb->current_prog, Prog_Names[pcb->script[pcb->current_prog-1]], pcb->username
 	);
-	// TODO remove hard-coded 0 & replace with line below
-	//print_out( "\t\tCPU burst was %d instructions.\n", CPU.CPU_burst );
-	print_out( "\t\tCPU burst was %d instructions.\n\n", 0 );
+	print_out( "\t\tCPU burst was %u instructions.\n\n", pcb->sjnburst );
 
 	// If objective 4 or higher
 	if( Objective >= 4 ){
