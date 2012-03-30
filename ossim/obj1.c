@@ -443,7 +443,31 @@ Dump_evt( )
 	// if debug flag is turned on
 	if( DEBUG_EVT )
 	{
-		/* print debugging message */
+
+		if( Event_List == NULL ){
+			printf( "DEBUG: Event_List is NULL\n" );
+			return;
+		}
+
+		// DECLARE VARIABLES
+		struct event_list* curr;
+		int i;
+
+		// iterate through each node in the Event_List
+		curr = Event_List;
+		i = 0;
+		do{
+
+			printf( "DEBUG: Event_List node #%d, Agent:|%d|, Event:|%d|\n",
+			 i, curr->agent, curr->event
+			);
+
+			// iterate to the next node in the Event List
+			curr = curr->next;
+			i++;
+
+		} while( curr != NULL && curr != Event_List );
+
 	}
 	else // do not print any message
 	{ ; }

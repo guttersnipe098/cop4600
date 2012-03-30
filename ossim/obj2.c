@@ -490,7 +490,7 @@ Cpu( )
 		result = Fetch( &instruction );
 
 		// did fetch finish OK?
-		if( result != 0 ){
+		if( result < 0 ){
 			return;
 		}
 
@@ -498,6 +498,13 @@ Cpu( )
 		switch( instruction.opcode ){
 
 			case SIO_OP:
+
+				//If the objective is 3 or higher
+				if( Objective >= 3 ){
+					//Increment total number of burst cycles for PCB
+					CPU.active_pcb->sjnburst = CPU.active_pcb->sjnburst + instruction.operand.burst;
+				}
+
 				Burst_time( instruction.operand.burst, &sim_time );
 				Add_time( &Clock, &sim_time );
 				Add_Event( SIO_EVT, agent_id, &sim_time );
@@ -506,6 +513,13 @@ Cpu( )
 				return;
 
 			case WIO_OP:
+
+				//If the objective is 3 or higher
+				if( Objective >= 3 ){
+					//Increment total number of burst cycles for PCB
+					CPU.active_pcb->sjnburst = CPU.active_pcb->sjnburst + instruction.operand.burst;
+				}
+
 				Burst_time( instruction.operand.burst, &sim_time );
 				Add_time( &Clock, &sim_time );
 				Add_Event( WIO_EVT, agent_id, &sim_time );
@@ -514,6 +528,13 @@ Cpu( )
 				return;
 
 			case END_OP:
+
+				//If the objective is 3 or higher
+				if( Objective >= 3 ){
+					//Increment total number of burst cycles for PCB
+					CPU.active_pcb->sjnburst = CPU.active_pcb->sjnburst + instruction.operand.burst;
+				}
+
 				Burst_time( instruction.operand.burst, &sim_time );
 				Add_time( &Clock, &sim_time );
 				Add_Event( END_EVT, agent_id, &sim_time );

@@ -1,4 +1,74 @@
-Num_Terminals (inclusive).
+/**
+	simulator.c
+
+
+	Simulator Project for COP 4600
+
+	Revision List:
+		Original Design:  Dr. David Workman, 1990
+		Revised by Tim Hughey and Mark Stephens, 1993
+		Revised by Wade Spires, Spring 2005
+		Minor Revisions by Sean Szumlanski, Spring 2010
+*/
+
+#include <assert.h>
+#include <ctype.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h> 
+#include <string.h>
+#include "osdefs.h"
+#include "externs.h"
+
+/*
+	Definitions of global simulator variables with initial values.
+	Note that some values will change after the configuration file is read and
+	processed.
+ */
+
+/** Current programming objective to run. */
+int    Objective = 0;
+
+char  Last_Name[BUFSIZ];  ///<
+char  Outfile[BUFSIZ];    ///< Name of output file (Last_Name.dat)
+
+/*
+	File pointers and names
+ */
+FILE*  Out_fp    = NULL;  // output file pointer for simulator
+FILE*  Script_fp = NULL;  // script file pointer for script.dat
+
+// File pointers to each program script
+FILE*  Prog_Files[ NUM_PROGRAMS - 1 ];
+
+// Strings for input and output matching
+char*  Prog_Names[]  = { "EDITOR", "PRINTER", "COMPILER", "LINKER", "USER",
+	"BOOT", "LOGOFF" };
+
+/** Name of program files (also referred to as scripts). */
+char*  Prog_File_Names[] =
+	{ "editor.dat", "printer.dat", "compiler.dat", "linker.dat", "user.dat",
+	"boot.dat" };
+
+// Names of events
+char* Event_Names[] =
+	{ "LOGON", "SIO", "WIO", "EIO", "END", "TIMER", "SEGFAULT", "ADRFAULT" };
+
+/** Table of operator names. Note that NUM_OPCODES = number of opcodes. */
+char* Op_Names[] =
+	{ "SIO", "WIO", "REQ", "JUMP", "SKIP", "END" };
+
+/** Control switch for the CPU (ON or OFF). */
+control_switch_type  CPU_SW;
+
+/** Control switch for the Scheduler (ON or OFF). */
+control_switch_type  SCHED_SW;
+
+/**
+	Current user running in system.
+	User terminal have agent codes in the range 1 to Num_Terminals (inclusive).
 	Devices have agent codes in the range (Num_Terminals + 1) to 
 	(Num_Terminals + Num_Devices) (inclusive).
 	Changed after each call of the function Interrupt() in obj1.c.
@@ -123,7 +193,7 @@ unsigned int   One_Over_Beta;     ///< expected CPU burst (SJN)
 double         RHO       =  0.0;  ///< SJN Smoothing factor
 
 // Debugging flags.
-int  DEBUG_EVT     = 1;  // Flag controlling Event_List debug output
+int  DEBUG_EVT     = 0;  // Flag controlling Event_List debug output
 int  DEBUG_MEM     = 0;  // Flag controlling Mem debug output
 int  DEBUG_PCB     = 0;  // Flag controlling Term_Table debug output
 int  DEBUG_RBLIST  = 0;  // Flag controlling pcb.rb_q debug output

@@ -12,7 +12,7 @@
 * Notes:     This program was written to be compiled against the gnu99 standard.
 *            Please execute the following commands to build correctly:
 *
-*  CFLAGS="-g -I/home/eurip/ossim2010 --std=gnu99"
+*  CFLAGS="-O0 -g3 -I/home/eurip/ossim2010 --std=gnu99"
 *  export CFLAGS
 *  make -e sim
 *******************************************************************************/
