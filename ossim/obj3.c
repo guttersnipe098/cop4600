@@ -100,6 +100,10 @@ Logon_Service( )
 	sprintf( (char*) buf, "%03d", Agent ); // TODO: use something more secure than sprintf
 	strncat( pcb->username, (char*) buf, BUFSIZ-1 );
 
+	// TODO verify accuracy of TA suggestion
+	pcb->wait_rb = NULL;
+	pcb->rb_q = NULL;
+
 	// TODO remove debug prints
 	//printf( "User Logon:|%s|\n", (char*) pcb->username );
 	//printf( "\tpcb->term_pos:|%d|\n", pcb->term_pos );
@@ -523,7 +527,8 @@ if( pcb->seg_table == NULL ){
 
 		//		Increment amount of memory used
 
-		Total_Free = Total_Free - pcb->seg_table[i].size;
+		// "don't do that"
+		//Total_Free = Total_Free - pcb->seg_table[i].size;
 
 		// If program cannot fit into memory (total amount of free space < needed size)
 		// 	Clear user's segment table, which marks allocation failure
@@ -568,7 +573,7 @@ if( pcb->seg_table == NULL ){
 
 		}
 
-		//pcb->seg_table[i].base = base_ptr;
+		pcb->seg_table[i].base = base_ptr;
 			
 	}
 
@@ -692,6 +697,9 @@ Alloc_seg( int size )
 	//Else, if block is larger than needed
 	//	Use free block's base address for segment
 
+	// TODO: verify accuracy of TA's suggestion
+	int real_current_base = current->base;
+
 	//	Adjust node's size and starting position:
 	//		Increment base address and decrement block size by given size
 	current->base = current->base + size;
@@ -700,7 +708,9 @@ Alloc_seg( int size )
 	//	Decrement total amount of free memory
 	Total_Free = Total_Free - size;
 
-	return current->base;
+	// TODO: verify accuracy of TA's suggestion
+	//return current->base;
+	return real_current_base;
 
 }
 
@@ -1195,6 +1205,31 @@ Abend_Service( )
  */
 void print_free_list( )
 {
+
+	if( Free_Mem == NULL ){
+		printf( "DEBUG: Free_Mem is NULL\n" );
+		return;
+	}
+
+	// DECLARE VARIABLES
+	struct seg_list* curr;
+	int i;
+
+	// iterate through each node in Free_Mem
+	curr = Free_Mem;
+	i = 0;
+	do{
+
+		printf( "DEBUG: Free_Mem node #%d, base:|%d|, size:|%d|\n",
+		 i, curr->base, curr->size
+		);
+
+		// iterate to the next node in Free_Mem
+		curr = curr->next;
+		i++;
+
+	} while( curr != NULL && curr != Free_Mem );
+
 }
 
 /**

@@ -258,6 +258,11 @@ main( int argc, char** argv )
 	// for each event in the event list
 	while( Event_List != NULL )
 	{
+
+		// TODO: remove debug
+		printf( "****STARTING LOOP (event dump follows)****\n" );
+		Dump_evt();
+
 		// disable running of CPU and scheduling when interrupt occurs
 		CPU_SW = SCHED_SW = OFF;
 
@@ -305,6 +310,10 @@ main( int argc, char** argv )
 		{
 			Exec_Program( &Old_State );
 		}
+
+		// TODO: remove debug
+		printf( "****ENDING LOOP****\n" );
+
 	}
 
 	// write statistics, close files, etc.
@@ -366,6 +375,11 @@ Interrupt_Handler( )
 
 		case SEGFAULT_EVT:
 		case ADRFAULT_EVT:
+
+			// TODO; remove debug
+			printf( "%d/\n", Event );
+			Dump_evt();
+
 			Abend_Service();
 			if( Objective == 2 )
 			{
