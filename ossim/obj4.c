@@ -312,10 +312,10 @@ Scheduler( )
 		CPU.ready_q = CPU.ready_q->next;
 
 	// TODO: add below else for "removing last pcb in ready queue" case
-	//} else {
-		//CPU.ready_q->next = NULL
-		//CPU.ready_q->prev = NULL
-		//CPU.ready_q = NULL
+	} else {
+		CPU.ready_q->next = NULL;
+		CPU.ready_q->prev = NULL;
+		CPU.ready_q = NULL;
 	}
 
 	// TODO: free(CPU.ready_q) here?
@@ -1296,7 +1296,30 @@ Dump_cpuq( )
 	// if debug flag is turned on
 	if( DEBUG_CPUQ )
 	{
-		/* print debugging message */
+		// DECLARE VARIABLES
+		struct pcb_list* curr;
+		int i;
+
+		curr = CPU.ready_q;
+
+		if( curr == NULL ){
+			printf( "DEBUG: CPU.ready_q is NULL\n" );
+			return;
+		}
+
+		// iterate through each node in the rb_list
+		i = 0;
+		do{
+
+			printf( "DEBUG: CPU.ready_q node #%d term_pos:|%d|\n",
+			 i, curr->pcb->term_pos
+			);
+
+			// iterate to the next node in the rb_list
+			curr = curr->next;
+			i++;
+
+		} while( curr != NULL && curr != CPU.ready_q );
 	}
 	else // do not print any message
 	{ ; }
