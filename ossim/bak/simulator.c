@@ -241,6 +241,7 @@ int  DEBUG_CPUQ    = 0;  // Flag controlling CPU.ready_q debug output
 int
 main( int argc, char** argv )
 {
+
 	// read configuration file
 	Init();
 
@@ -255,9 +256,15 @@ main( int argc, char** argv )
 	// load boot program from file into memory
 	Boot();
 
+	int i = 0;
 	// for each event in the event list
 	while( Event_List != NULL )
 	{
+
+		if( i > 10 ){
+			printf( "TOO MUCH FAIL IN THIS HOUSE!\n" );
+			break;
+		}
 
 		// TODO: remove debug
 		printf( "****STARTING LOOP (event dump follows)****\n" );
@@ -314,6 +321,7 @@ main( int argc, char** argv )
 		// TODO: remove debug
 		printf( "****ENDING LOOP****\n" );
 
+		i++;
 	}
 
 	// write statistics, close files, etc.

@@ -239,8 +239,18 @@ Interrupt( )
 	// write event to output file
 	Write_Event( (int) event->event, event->agent, &(event->time) );
 
-	// deallocate this event from memory
+	//Deallocate the removed event item
+	// TODO: revisit discrepancy
+	// TODO: check Event_List == NULL & update accordingly
 	free( event );
+
+	//Save CPU.mode and CPU.pc into Old_State.
+	Old_State.mode = CPU.state.mode;
+	Old_State.pc = CPU.state.pc;
+	
+	//Change New_State to CPU.mode and CPU.pc
+	New_State.mode = CPU.state.mode;
+	New_State.mode = CPU.state.mode;
 
 	return;
 
