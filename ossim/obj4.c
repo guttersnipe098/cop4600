@@ -294,6 +294,10 @@ Scheduler( )
 	//Get first pcb in CPU's ready queue
 	nextPcbListNode = CPU.ready_q;
 
+	if( nextPcbListNode == NULL ){
+		return NULL;
+	}
+
 	//Remove first node in queue
 	nextPcb = nextPcbListNode->pcb;
 
