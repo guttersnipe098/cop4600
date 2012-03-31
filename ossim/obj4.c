@@ -478,10 +478,12 @@ Alloc_rb( )
 		//Set number of bytes to transfer
 	newIORB->bytes = device_instr.operand.bytes;
 
-	// TODO: revisit discrepancy
+	// TODO: be aware of addition
+	saved_pc.offset = saved_pc.offset - 1;
 
 		//Save logical address (segment/offset pair) of the device instruction using process's saved PC
-	newIORB->req_id = saved_pc;
+	newIORB->req_id.segment = saved_pc.segment;
+	newIORB->req_id.offset = saved_pc.offset;
 
 	return newIORB;
 }
@@ -1236,8 +1238,8 @@ Dump_rblist( pcb_type* pcb )
 			 //i, curr->rb->status, curr->rb->pcb->status, curr->rb->dev_id,
 			 //curr->rb->bytes
 			//);
-			printf( "DEBUG: pcb->rb_q node #%d rT:|%x|\n",
-			 i, curr->rb
+			printf( "DEBUG: pcb->rb_q node #%d s:|%d| o:|%d|\n",
+			 i, curr->rb->req_id.segment, curr->rb->req_id.offset
 			);
 
 			// iterate to the next node in the rb_list

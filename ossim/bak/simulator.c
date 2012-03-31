@@ -261,7 +261,7 @@ main( int argc, char** argv )
 	while( Event_List != NULL )
 	{
 
-		if( i > 10 ){
+		if( i > 100 ){
 			printf( "TOO MUCH FAIL IN THIS HOUSE!\n" );
 			break;
 		}
