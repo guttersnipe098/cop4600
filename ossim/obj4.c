@@ -1,14 +1,14 @@
 /*******************************************************************************
 * File:      obj4.c
-* Version:   0.2
-* Purpose:   TODO
+* Version:   0.3
+* Purpose:   Implements programs and handles I/O requests.
 * Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
 *            Sean Szumlanski
 * Coded by:  Michael Altfield <maltfield@knights.ucf.edu>
 * Course:    COP 4600 <http://www.cs.ucf.edu/courses/cop4600/spring2012>
 * Objective: 3
 * Created:   2012-03-24
-* Updated:   2012-03-26
+* Updated:   2012-04-09
 * Notes:     This program was written to be compiled against the gnu99 standard.
 *            Please execute the following commands to build correctly:
 *
@@ -547,6 +547,9 @@ Start_IO( int dev_id )
 	struct time_type transferTime;
 	struct time_type time;
 
+	// TODO: verify discrepancy of: if(){ return } conditions
+
+	// TODO: change to "==" (?)
 	//If the device is busy
 	if( Dev_Table[ dev_id ].current_rb != NULL ){
 		//Do nothing
@@ -554,7 +557,7 @@ Start_IO( int dev_id )
 	}
 
 	//If the device has no requests to service in its waiting queue
-	if( Dev_Table[ dev_id ].wait_q != NULL ){
+	if( Dev_Table[ dev_id ].wait_q == NULL ){
 		//Do nothing
 		return;
 	}
@@ -922,6 +925,9 @@ Delete_rb( rb_type* rb, pcb_type* pcb )
 void
 Eio_Service( )
 {
+
+	// TODO: remove debug print
+	printf( "called Eio_Service()" );
 
 	// DECLARE VARIABLES
 	struct device_type* device;
