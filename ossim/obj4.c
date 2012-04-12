@@ -6,7 +6,7 @@
 *            Sean Szumlanski
 * Coded by:  Michael Altfield <maltfield@knights.ucf.edu>
 * Course:    COP 4600 <http://www.cs.ucf.edu/courses/cop4600/spring2012>
-* Objective: 3
+* Objective: 4
 * Created:   2012-03-24
 * Updated:   2012-04-11
 * Notes:     This program was written to be compiled against the gnu99 standard.

@@ -1,3 +1,21 @@
+/*******************************************************************************
+* File:      obj4.c
+* Version:   0.1
+* Purpose:   Calculates the OS's statistics
+* Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
+*            Sean Szumlanski
+* Coded by:  Michael Altfield <maltfield@knights.ucf.edu>
+* Course:    COP 4600 <http://www.cs.ucf.edu/courses/cop4600/spring2012>
+* Objective: 5
+* Created:   2012-04-11
+* Updated:   2012-04-11
+* Notes:     This program was written to be compiled against the gnu99 standard.
+*            Please execute the following commands to build correctly:
+*
+*  CFLAGS="-O0 -g3 -I/home/eurip/ossim2010 --std=gnu99"
+*  export CFLAGS
+*  make -e sim
+*******************************************************************************/
 /**
 	obj5.c
 
