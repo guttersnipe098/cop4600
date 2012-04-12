@@ -1,6 +1,6 @@
 /*******************************************************************************
 * File:      obj3.c
-* Version:   1.2
+* Version:   1.4
 * Purpose:   Read all remaining *.dat files, build PCB, load programs & service
 *            event interruption.
 * Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
@@ -9,7 +9,7 @@
 * Course:    COP 4600 <http://www.cs.ucf.edu/courses/cop4600/spring2012>
 * Objective: 3
 * Created:   2012-02-25
-* Updated:   2012-03-26
+* Updated:   2012-04-11
 * Notes:     This program was written to be compiled against the gnu99 standard.
 *            Please execute the following commands to build correctly:
 *
@@ -341,7 +341,8 @@ Next_pgm( pcb_type* pcb )
 
 		// calculate the difference between the logon time and the current time;
 		// save the result to pcb->total_logon_time
-		Diff_time( &Clock, &pcb->total_logon_time );
+		Diff_time( &pcb->logon_time, &pcb->total_logon_time );
+		//Diff_time( &Clock, &pcb->total_logon_time );
 
 		// print to data file that this user has logged off
 		print_out( "\t\tUser %s has logged off.\n", pcb->username );
@@ -1109,7 +1110,7 @@ End_Service( )
 
 	// DECLARE VARIABLES
 	struct pcb_type* pcb;
-	struct time_type* active_time;
+	struct time_type active_time;
 
 	// Retrieve PCB associated with program from terminal table
 	// TODO: change back from "Agent - 1" to "Agent" (?)
@@ -1123,9 +1124,14 @@ End_Service( )
 
 	// Calculate active time for process and busy time for CPU
 
-	active_time = &pcb->run_time;
-	Diff_time( &Clock, active_time );
-	Add_time( active_time, &CPU.total_busy_time );
+	active_time = Clock;
+	Diff_time( &( pcb->run_time ), &active_time );
+	Add_time( &active_time, &( pcb->total_run_time ) );
+	Add_time( &active_time, &( CPU.total_busy_time ) );
+
+	//active_time = &pcb->run_time;
+	//Diff_time( &Clock, active_time );
+	//Add_time( active_time, &CPU.total_busy_time );
 
    // Record time process became blocked
 	pcb->block_time = Clock;
@@ -1146,7 +1152,7 @@ End_Service( )
 	}
 
 	// TODO remove debug print
-	printf( "|%d|\n", pcb->script[pcb->current_prog] );
+	//printf( "|%d|\n", pcb->script[pcb->current_prog] );
 
 	// If the PCB has no outstanding I/O request blocks
 	//	Load the next program for the user--call Next_pgm()

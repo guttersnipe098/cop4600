@@ -1,6 +1,6 @@
 /*******************************************************************************
 * File:      obj4.c
-* Version:   0.3
+* Version:   0.4
 * Purpose:   Implements programs and handles I/O requests.
 * Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
 *            Sean Szumlanski
@@ -8,7 +8,7 @@
 * Course:    COP 4600 <http://www.cs.ucf.edu/courses/cop4600/spring2012>
 * Objective: 3
 * Created:   2012-03-24
-* Updated:   2012-04-09
+* Updated:   2012-04-11
 * Notes:     This program was written to be compiled against the gnu99 standard.
 *            Please execute the following commands to build correctly:
 *
@@ -287,6 +287,7 @@ Scheduler( )
 	// DECLARE VARIABLES
 	struct pcb_list* nextPcbListNode;
 	struct pcb_type* nextPcb;
+	struct time_type ready_time;
 
 	//Update the number of processes serviced by the CPU
 	CPU.num_served = CPU.num_served + 1;
@@ -325,13 +326,23 @@ Scheduler( )
 	// TODO: free(CPU.ready_q) here?
 
 	//Calculate time process was ready
-	Diff_time( &Clock, &nextPcb->ready_time );
+
+	//ready_time.seconds = 0;
+	//ready_time.nanosec = 0;
+
+	ready_time = Clock;
+	nextPcb->run_time = Clock;
+
+	Diff_time( &nextPcb->ready_time, &ready_time );
+	//Diff_time( &Clock, &nextPcb->ready_time );
 
 	//Increment total ready time for process
-	Add_time( &nextPcb->ready_time, &nextPcb->total_ready_time );
+	Add_time( &ready_time, &nextPcb->total_ready_time );
+	//Add_time( &nextPcb->ready_time, &nextPcb->total_ready_time );
 
 	//Increment total CPU queue waiting time
-	Add_time( &nextPcb->ready_time, &CPU.total_q_time );
+	Add_time( &ready_time, &CPU.total_q_time );
+	//Add_time( &nextPcb->ready_time, &CPU.total_q_time );
 
 	//Reset the burst count for the next program
 	nextPcb->sjnburst = 0;
@@ -544,8 +555,9 @@ Start_IO( int dev_id )
 	// DECLARE VARIABLES
 	struct rb_list* rbListNode;
 	struct rb_type* rb;
-	struct time_type transferTime;
-	struct time_type time;
+	struct time_type wait_time;
+	struct time_type transfer_time;
+	struct time_type eio_time;
 
 	// TODO: verify discrepancy of: if(){ return } conditions
 
@@ -591,26 +603,27 @@ Start_IO( int dev_id )
 	// TODO: revisit discrepancy on all time calculations below
 
 	//Update time spent waiting in queue--calculate difference between current time and time it was enqueued and add this value to the current queue wait time--use Add_time() and Diff_time()
-	time = Clock;
-	Diff_time( &( rb->q_time ), &time );
-	Add_time( &time, &( Dev_Table[ dev_id ].total_q_time ) );
+	wait_time = Clock;
+	Diff_time( &( rb->q_time ), &wait_time );
+	Add_time( &wait_time, &( Dev_Table[ dev_id ].total_q_time ) );
 
 	//Compute length of time that I/O will take (transfer time)--compute number of seconds and then use the remainder to calculate the number of nanoseconds
-	transferTime.seconds =   rb->bytes / Dev_Table[ dev_id ].bytes_per_sec;
-	transferTime.nanosec = ( rb->bytes % Dev_Table[ dev_id ].bytes_per_sec )
+	transfer_time.seconds =   rb->bytes / Dev_Table[ dev_id ].bytes_per_sec;
+	transfer_time.nanosec = ( rb->bytes % Dev_Table[ dev_id ].bytes_per_sec )
 	 * Dev_Table[ dev_id ].nano_per_byte;
 
 	//Increment device's busy time by the transfer time--use Add_time()
-	Add_time( &transferTime, &( Dev_Table[ dev_id ].total_busy_time ) );
+	Add_time( &transfer_time, &( Dev_Table[ dev_id ].total_busy_time ) );
 
 	//Compute time I/O ends--ending time is the current time + transfer time--use Add_time() and Diff_time()
-	Add_time( &Clock, &transferTime );
+	eio_time = Clock;
+	Add_time( &transfer_time, &eio_time );
 
 	//Update the number of IO requests served by the device
 	Dev_Table[ dev_id ].num_served = Dev_Table[ dev_id ].num_served + 1;
 
 	//Add ending I/O device interrupt to event list
-	Add_Event( EIO_EVT, dev_id + Num_Terminals + 1, &transferTime );
+	Add_Event( EIO_EVT, dev_id + Num_Terminals + 1, &eio_time );
 
 }
 
@@ -926,13 +939,11 @@ void
 Eio_Service( )
 {
 
-	// TODO: remove debug print
-	printf( "called Eio_Service()" );
-
 	// DECLARE VARIABLES
 	struct device_type* device;
 	struct rb_type* rb;
 	struct pcb_type* pcb;
+	struct time_type block_time;
 
 	//Retrieve device that caused the I/O interrupt from the device table
 	device = &( Dev_Table[ Agent - Num_Terminals - 1 ] );
@@ -983,8 +994,10 @@ Eio_Service( )
 		pcb->ready_time = Clock;
 
 			//Calculate and record time process was blocked
-		Diff_time( &Clock, &( pcb->block_time ) );
-		Add_time( &( pcb->block_time ), &( pcb->total_block_time ) );
+		Diff_time( &( pcb->block_time ), &block_time );
+		Add_time( &block_time, &( pcb->total_block_time ) );
+		//Diff_time( &Clock, &( pcb->block_time ) );
+		//Add_time( &( pcb->block_time ), &( pcb->total_block_time ) );
 
 			//If CPU is has no currently active process
 		if( CPU.active_pcb == NULL ){
@@ -1019,8 +1032,14 @@ Eio_Service( )
 		pcb->ready_time = Clock;
 
 			//Calculate and record time process was blocked
-		Diff_time( &Clock, &( pcb->block_time ) );
-		Add_time( &( pcb->block_time ), &( pcb->total_block_time ) );
+		block_time = Clock;
+		Diff_time( &( pcb->block_time ), &block_time );
+		Add_time( &block_time, &( pcb->total_block_time ) );
+		//time = Clock;
+		////Diff_time( &Clock, &( pcb->block_time ) );
+		//Diff_time( &( pcb->block_time ), &time );
+		////Add_time( &( pcb->block_time ), &( pcb->total_block_time ) );
+		//Add_time( &time, &( pcb->total_block_time ) );
 
 			//If CPU is idle
 		if( CPU.active_pcb == NULL ){
