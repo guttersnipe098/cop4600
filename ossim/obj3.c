@@ -341,6 +341,7 @@ Next_pgm( pcb_type* pcb )
 
 		// calculate the difference between the logon time and the current time;
 		// save the result to pcb->total_logon_time
+		pcb->total_logon_time = Clock;
 		Diff_time( &pcb->logon_time, &pcb->total_logon_time );
 		//Diff_time( &Clock, &pcb->total_logon_time );
 
