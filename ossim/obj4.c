@@ -994,6 +994,7 @@ Eio_Service( )
 		pcb->ready_time = Clock;
 
 			//Calculate and record time process was blocked
+		block_time = Clock;
 		Diff_time( &( pcb->block_time ), &block_time );
 		Add_time( &block_time, &( pcb->total_block_time ) );
 		//Diff_time( &Clock, &( pcb->block_time ) );
