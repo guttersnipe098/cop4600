@@ -1,6 +1,6 @@
 /*******************************************************************************
 * File:      obj2.c
-* Version:   0.8
+* Version:   0.9
 * Purpose:   Implements loading the event list
 * Template:  Dr. David Workman, Time Hughey, Mark Stephens, Wade Spires, and
 *            Sean Szumlanski
@@ -8,7 +8,7 @@
 * Course:    COP 4600 <http://www.cs.ucf.edu/courses/cop4600/spring2012>
 * Objective: 2
 * Created:   2012-02-07
-* Updated:   2012-03-24
+* Updated:   2012-04-13
 * Notes:     This program was written to be compiled against the gnu99 standard.
 *            Please execute the following commands to build correctly:
 *
@@ -340,12 +340,13 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 		for( int i=0; i<Num_Devices; i++ ){
 	
 			// TODO: remove debug
-			//printf( "comparing:|%s|%s|\n", opcode_str, Dev_Table[i].name );
+			printf( "comparing:|%s|%s|\n", opcode_str, Dev_Table[i].name );
+			printf( "\t(next):|%s|%s|\n", opcode_str, Dev_Table[i+1].name );
 
 			// does the opcode match this device?
 			if(
 			 strncmp(
-			  opcode_str, Dev_Table[i].name, DEV_NAME_LENGTH-1
+			  opcode_str, Dev_Table[i].name, DEV_NAME_LENGTH
 			 ) == 0
 			){
 				// this device is our opcode
@@ -354,6 +355,9 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 				// to prevent conflict with real operation instructions
 				instruction->opcode = NUM_OPCODES + i;
 				sscanf( operand_str, "%lu", &instruction->operand.bytes );
+
+				// TODO: remove debug
+				printf( "\n" );
 
 				// exit the loop (there's no need to keep looking for a match)
 				break;
