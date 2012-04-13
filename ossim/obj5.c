@@ -123,16 +123,16 @@ Calc_Stats( )
 	}
 
 	//Calculate average user execution time
-	Average_time( &Tot_Run, CPU.num_served, &Avg_Run );
+	Average_time( &Tot_Run, Num_Terminals, &Avg_Run );
 
 	//Calculate average user logon time
-	Average_time( &Tot_Logon, CPU.num_served, &Avg_Logon );
+	Average_time( &Tot_Logon, Num_Terminals, &Avg_Logon );
 
 	//Calculate average user blocked time
-	Average_time( &Tot_Block, CPU.num_served, &Avg_Block );
+	Average_time( &Tot_Block, Num_Terminals, &Avg_Block );
 
 	//Calculate average user wait time
-	Average_time( &Tot_Wait, CPU.num_served, &Avg_Wait );
+	Average_time( &Tot_Wait, Num_Terminals, &Avg_Wait );
 
 	//Calculate response time for CPU
 	time = CPU.total_q_time;

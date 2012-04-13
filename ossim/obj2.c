@@ -340,8 +340,8 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 		for( int i=0; i<Num_Devices; i++ ){
 	
 			// TODO: remove debug
-			printf( "comparing:|%s|%s|\n", opcode_str, Dev_Table[i].name );
-			printf( "\t(next):|%s|%s|\n", opcode_str, Dev_Table[i+1].name );
+			//printf( "comparing:|%s|%s|\n", opcode_str, Dev_Table[i].name );
+			//printf( "\t(next):|%s|%s|\n", opcode_str, Dev_Table[i+1].name );
 
 			// does the opcode match this device?
 			if(
@@ -357,7 +357,7 @@ Get_Instr( int prog_id, struct instr_type* instruction )
 				sscanf( operand_str, "%lu", &instruction->operand.bytes );
 
 				// TODO: remove debug
-				printf( "\n" );
+				//printf( "\n" );
 
 				// exit the loop (there's no need to keep looking for a match)
 				break;
